@@ -1,6 +1,8 @@
 import fpt.com.*;
 import javafx.application.Application;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +14,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -30,12 +33,19 @@ public class ViewShop extends GridPane {
     private ObservableList<String> list = FXCollections.observableArrayList();
     public Button addButton = new Button("Add");
     public Button deleteButton = new Button("Delete");
+    public int selectedProductIndex = 0;
 
     public void bindData (ModelShop model) {
         lv.setItems(model.productNames);
     }
 
     public ViewShop() {
+
+
+        lv.getSelectionModel().selectedItemProperty().addListener(
+                (ov, old_val, new_val) -> {
+                    selectedProductIndex = lv.getSelectionModel().getSelectedIndex();
+                });
         this.add(lv, 1, 1);
         VBox v = new VBox();
         this.add(v, 2, 1);
@@ -67,5 +77,6 @@ public class ViewShop extends GridPane {
 
     public void addEventHandler(EventHandler<ActionEvent> eventHandler) {
         addButton.addEventHandler(ActionEvent.ACTION, eventHandler);
+        deleteButton.addEventHandler(ActionEvent.ACTION, eventHandler);
     }
 }

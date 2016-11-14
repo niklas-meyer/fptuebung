@@ -1,25 +1,30 @@
 import fpt.com.*;
-import fpt.com.Product;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
  * Created by NiklasM on 05.11.16.
  */
-public class Order  extends java.util.ArrayList<fpt.com.Product> implements fpt.com.Order {
-    private ArrayList<Product> orderedProducts;
+public class Order implements fpt.com.Order {
+
+    public ObservableList<Product> orderedProducts = FXCollections.observableArrayList(
+            new Product("",4.0,5),
+            new Product("2.Produkt",4.0,3)
+    );
     private SimpleIntegerProperty quantity;
     private SimpleFloatProperty sum;
 
-    @Override
-    public boolean add(Product e) {
+
+    public boolean delete(fpt.com.Product p) {
         return false;
     }
 
-    @Override
-    public boolean delete(Product p) {
+    public boolean add(fpt.com.Product e) {
         return false;
     }
 
@@ -49,7 +54,7 @@ public class Order  extends java.util.ArrayList<fpt.com.Product> implements fpt.
     }
 
     @Override
-    public Iterator<Product> iterator() {
+    public Iterator<fpt.com.Product> iterator() {
         return null;
     }
 }

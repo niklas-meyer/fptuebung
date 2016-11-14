@@ -31,7 +31,7 @@ public class ModelShop extends ModifiableObservableListBase {
     @Override
     protected void doAdd(int index, Object element) {
         //productList.products.add((Product)element);
-        productNames.add(((Product)element).getName());
+        productNames.add(((Product)element).getName()+" ("+((Product)element).getPrice()+","+((Product)element).getQuantity()+")");
     }
 
     @Override

@@ -14,6 +14,16 @@ public class Product implements fpt.com.Product {
     private int quantity;
     private SimpleStringProperty name= new SimpleStringProperty();
 
+    public Product(){
+
+    }
+
+    public Product(String name, Double price, Integer quantity){
+        setName(name);
+        setPrice(price);
+        setQuantity(quantity);
+    }
+
     public long getId() {
         return id.get();
     }
