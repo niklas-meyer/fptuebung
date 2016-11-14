@@ -2,6 +2,7 @@ import fpt.com.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 /**
  * Created by NiklasM on 05.11.16.
@@ -36,11 +37,12 @@ public class ProductList extends java.util.ArrayList<fpt.com.Product> implements
 
     @Override
     public Product findProductById(long id) {
-        return null;
+        return (Product)this.get((int)id);
     }
 
     @Override
     public Product findProductByName(String name) {
+
         return null;
     }
 

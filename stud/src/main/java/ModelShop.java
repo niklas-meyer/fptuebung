@@ -3,6 +3,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ModifiableObservableListBase;
 import javafx.collections.ObservableList;
 
+import java.util.stream.Collectors;
+
 /**
  * Created by NiklasM on 09.11.16.
  */
@@ -33,22 +35,16 @@ public class ModelShop extends ModifiableObservableListBase {
 
     @Override
     protected Object doSet(int index, Object element) {
-        for(fpt.com.Product p: (ProductList)element) {
-            products.add((Product)p);
-        }
+        products.addAll(((ProductList) element).stream().map(p -> (Product) p).collect(Collectors.toList()));
         return this;
     }
 
     @Override
     protected Object doRemove(int index) {
-        try {
-            products.remove(index);
+            products.remove(productList.findProductById(index));
             productList.delete(products.get(index));
 
             return products.get(index);
-        }catch (java.lang.IndexOutOfBoundsException ex){
-            return null;
-        }
 
     }
 }

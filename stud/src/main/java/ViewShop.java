@@ -28,7 +28,6 @@ public class ViewShop extends GridPane {
     private TextField t1 = new TextField();
     private TextField t2 = new TextField();
     private TextField t3 = new TextField();
-    private ObservableList<String> list = FXCollections.observableArrayList();
     public Button addButton = new Button("Add");
     public Button deleteButton = new Button("Delete");
     public int selectedProductIndex = 0;
@@ -55,9 +54,7 @@ public class ViewShop extends GridPane {
         });
 
         lv.getSelectionModel().selectedItemProperty().addListener(
-                (ov, old_val, new_val) -> {
-                    selectedProductIndex = lv.getSelectionModel().getSelectedIndex();
-                });
+                (ov, old_val, new_val) -> selectedProductIndex = lv.getSelectionModel().getSelectedIndex());
         this.add(lv, 1, 1);
         VBox v = new VBox();
         this.add(v, 2, 1);

@@ -26,12 +26,7 @@ public class ControllerShop implements EventHandler{
     public void handle(Event event) {
         if(event.getSource().equals(view.addButton)) {
             model.doAdd(1, view.getProduct());
-            model.productList.listIterator().forEachRemaining(new Consumer<fpt.com.Product>() {
-                @Override
-                public void accept(Product product) {
-                    System.out.print(product.getName());
-                }
-            });
+            model.productList.listIterator().forEachRemaining(product -> System.out.print(product.getName()));
         }
         if(event.getSource().equals(view.deleteButton)) {
             model.doRemove(view.selectedProductIndex);
