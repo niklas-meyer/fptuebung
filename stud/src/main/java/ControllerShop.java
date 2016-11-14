@@ -16,14 +16,19 @@ public class ControllerShop implements EventHandler{
         this.model = m;
         this.view = v;
         view.addEventHandler(this);
-
+        view.bindData(model);
 
     }
 
     @Override
     public void handle(Event event) {
-        model.doAdd(1, view.getProduct());
-        System.out.println("done");
+        if(event.getSource().equals(view.addButton)) {
+            model.doAdd(1, view.getProduct());
+        }
+        if(event.getSource().equals(view.deleteButton)) {
+            model.doRemove((int) view.getProduct().getId());
+        }
+
     }
 }
 

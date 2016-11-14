@@ -29,7 +29,7 @@ public class Product implements fpt.com.Product {
     }
 
     @Override
-    public void setPrice(double price) {
+    public void setPrice(double price)  {
         this.price.set(price);
 
     }
