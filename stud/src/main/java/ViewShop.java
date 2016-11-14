@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /**
@@ -50,6 +52,20 @@ public class ViewShop extends GridPane {
         VBox v = new VBox();
         this.add(v, 2, 1);
         v.getChildren().addAll(l1, t1, l2, t2, l3, t3, addButton, deleteButton);
+        addButton.setStyle("-fx-background-color: #00AA22;");
+        addButton.setMinSize(200, 30);
+        deleteButton.setStyle("-fx-background-color: #AA2200");
+        deleteButton.setMinSize(200, 30);
+        v.setSpacing(5.0);
+        v.setStyle("-fx-background-color: #AAAAAA;");
+        l1.setStyle("-fx-font-family: Avenir Ultra Light; -fx-font-size: 16;");
+        l1.setPadding(new Insets(0,0,0,80));
+        l2.setStyle("-fx-font-family: Avenir Ultra Light; -fx-font-size: 16;");
+        l2.setPadding(new Insets(0,0,0,83));
+        l3.setStyle("-fx-font-family: Avenir Ultra Light; -fx-font-size: 16;");
+        l3.setPadding(new Insets(0,0,0,80));
+
+
     }
 
 
