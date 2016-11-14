@@ -1,21 +1,10 @@
-import fpt.com.*;
-import javafx.application.Application;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 /**
  * Created by NiklasM on 09.11.16.
@@ -23,7 +12,7 @@ import javafx.stage.Stage;
 public class ViewShop extends GridPane {
 
 
-    private ListView<String> lv = new ListView<>();
+    private ListView<Product> lv = new ListView<>();
     private Label l1 = new Label("Name");
     private Label l2 = new Label("Price");
     private Label l3 = new Label("Count");
@@ -36,11 +25,25 @@ public class ViewShop extends GridPane {
     public int selectedProductIndex = 0;
 
     public void bindData (ModelShop model) {
-        lv.setItems(model.productNames);
+
+        lv.setItems(model.products);
     }
 
     public ViewShop() {
 
+        lv.setCellFactory(e -> {
+            ListCell<Product> cell = new ListCell<Product>() {
+                @Override protected void updateItem(Product myObject, boolean b) {
+                    super.updateItem(myObject, myObject == null || b);
+                    if (myObject != null) {
+                        setText(myObject.getName() + " ( " + myObject.getPrice()+ " €  , " + myObject.getQuantity()+" Stück)");
+                    } else {
+                        setText("");
+                    }
+                }
+            };
+            return cell;
+        });
 
         lv.getSelectionModel().selectedItemProperty().addListener(
                 (ov, old_val, new_val) -> {

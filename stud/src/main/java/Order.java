@@ -13,8 +13,7 @@ import java.util.Iterator;
 public class Order implements fpt.com.Order {
 
     public ObservableList<Product> orderedProducts = FXCollections.observableArrayList(
-            new Product("",4.0,5),
-            new Product("2.Produkt",4.0,3)
+
     );
     private SimpleIntegerProperty quantity;
     private SimpleFloatProperty sum;

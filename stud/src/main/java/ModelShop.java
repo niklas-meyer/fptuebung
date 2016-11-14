@@ -1,20 +1,16 @@
-import fpt.com.*;
-import fpt.com.Product;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ModifiableObservableListBase;
 import javafx.collections.ObservableList;
-
-import java.util.stream.Collectors;
 
 /**
  * Created by NiklasM on 09.11.16.
  */
 public class ModelShop extends ModifiableObservableListBase {
-    ProductList productList = new ProductList();
-    ObservableList<String> productNames = FXCollections.observableArrayList("xyz","abc");
+    public ProductList productList = new ProductList();
+    ObservableList<Product> products = FXCollections.observableArrayList();
 
     public ModelShop(){
-
 
     }
 
@@ -30,20 +26,29 @@ public class ModelShop extends ModifiableObservableListBase {
 
     @Override
     protected void doAdd(int index, Object element) {
-        //productList.products.add((Product)element);
-        productNames.add(((Product)element).getName()+" ("+((Product)element).getPrice()+","+((Product)element).getQuantity()+")");
+        products.add((Product)element);
+        productList.add((Product)element);
+
     }
 
     @Override
     protected Object doSet(int index, Object element) {
-        //productNames.addAll(((ProductList) element).products.stream().map(Product::getName).collect(Collectors.toList()));
-        //return productNames;
-        return null;
+        for(fpt.com.Product p: (ProductList)element) {
+            products.add((Product)p);
+        }
+        return this;
     }
 
     @Override
     protected Object doRemove(int index) {
-        productNames.remove(index);
-        return productNames.get(index);
+        try {
+            products.remove(index);
+            productList.delete(products.get(index));
+
+            return products.get(index);
+        }catch (java.lang.IndexOutOfBoundsException ex){
+            return null;
+        }
+
     }
 }
