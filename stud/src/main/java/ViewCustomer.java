@@ -20,6 +20,8 @@ import javax.swing.*;
 
 public class ViewCustomer extends BorderPane{
     private HBox order= new HBox();
+    private Button loadB = new Button("Load");
+    private Button saveB = new Button("Save");
     private VBox v1 = new VBox();
     private VBox v2 = new VBox();
     private HBox h1 = new HBox();
@@ -27,6 +29,13 @@ public class ViewCustomer extends BorderPane{
     private Button buyButton = new Button("Buy");
     private TableView tv = new TableView();
     private ListView lv = new ListView();
+    ObservableList<String> options = FXCollections.observableArrayList(
+                    "Binary",
+                    "Beans",
+                    "XStream"
+            );
+    private ComboBox comboBox = new ComboBox(options);
+
 
     public void bindData (Order o) {
         tv.setItems(o.orderedProducts);
@@ -54,7 +63,7 @@ public class ViewCustomer extends BorderPane{
         v1.getChildren().add(lv);
         v2.getChildren().add(tv);
         h1.getChildren().add(buyButton);
-        order.getChildren().add(l1);
+        order.getChildren().addAll(l1, comboBox, loadB, saveB);
         h1.setMargin(buyButton, new Insets(20,0,20,0));
         order.setStyle("-fx-background-color: #55AA00, linear-gradient(#55AA00 50%, white 100%), radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%);");
         order.setMargin(l1, new Insets(20,50,20,50));
@@ -65,6 +74,8 @@ public class ViewCustomer extends BorderPane{
         this.setLeft(v1);
         this.setBottom(h1);
         this.setTop(order);
+
+
         h1.setAlignment(Pos.CENTER);
         buyButton.setMinSize(200,30);
         buyButton.setStyle("-fx-background-color: #c3c4c4, linear-gradient(#d6d6d6 50%, white 100%), radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%); -fx-background-radius: 30; -fx-background-insets: 0,1,1;  -fx-text-fill: black; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );");
