@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
  */
 public class ModelShop extends ModifiableObservableListBase {
     public ProductList productList = new ProductList();
+    public int index = 0;
     ObservableList<Product> products = FXCollections.observableArrayList();
 
     public ModelShop(){
@@ -30,6 +31,7 @@ public class ModelShop extends ModifiableObservableListBase {
     protected void doAdd(int index, Object element) {
         products.add((Product)element);
         productList.add((Product)element);
+        index++;
 
     }
 
@@ -42,9 +44,9 @@ public class ModelShop extends ModifiableObservableListBase {
     @Override
     protected Object doRemove(int index) {
             products.remove(productList.findProductById(index));
-            productList.delete(products.get(index));
+            productList.delete(productList.get(index));
 
-            return products.get(index);
+            return null;
 
     }
 }

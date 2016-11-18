@@ -12,6 +12,10 @@ public class ProductList extends java.util.ArrayList<fpt.com.Product> implements
     public ProductList(){
 
     }
+
+    public int getCounter(){
+        return this.counter;
+    }
     @Override
     public boolean add(fpt.com.Product e) {
             this.add(counter,e);
@@ -22,6 +26,7 @@ public class ProductList extends java.util.ArrayList<fpt.com.Product> implements
 
     public boolean delete(fpt.com.Product product) {
         if(this.remove(product)){
+            counter--;
             return true;
         }
         else {
