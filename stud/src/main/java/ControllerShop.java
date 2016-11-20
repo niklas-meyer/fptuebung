@@ -29,9 +29,10 @@ public class ControllerShop implements EventHandler{
             model.productList.listIterator().forEachRemaining(product -> System.out.print(product.getName()));
         }
         if(event.getSource().equals(view.deleteButton)) {
-            model.doRemove(view.selectedProductIndex);
-        }
+            model.doRemove((int)view.selectedProduct.getId());
 
+
+    }
     }
 }
 

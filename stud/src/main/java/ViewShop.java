@@ -3,6 +3,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,10 +11,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
+import javax.swing.*;
 
 /**
  * Created by NiklasM on 09.11.16.
@@ -22,15 +26,27 @@ public class ViewShop extends GridPane {
 
 
     private ListView<Product> lv = new ListView<>();
+    private Button loadB = new Button("Load");
+    private HBox topBox = new HBox();
+    private HBox topBox2 = new HBox();
+    private Button saveB = new Button("Save");
     private Label l1 = new Label("Name");
     private Label l2 = new Label("Price");
     private Label l3 = new Label("Count");
+    private Label l4 = new Label("Product List");
     private TextField t1 = new TextField();
     private TextField t2 = new TextField();
     private TextField t3 = new TextField();
     public Button addButton = new Button("Add");
     public Button deleteButton = new Button("Delete");
     public int selectedProductIndex = 0;
+    public Product selectedProduct = null;
+    ObservableList<String> options = FXCollections.observableArrayList(
+            "Binary",
+            "Beans",
+            "XStream"
+    );
+    private ComboBox comboBox = new ComboBox(options);
 
     public void bindData (ModelShop model) {
 
@@ -52,19 +68,27 @@ public class ViewShop extends GridPane {
             };
             return cell;
         });
-
+        l4.setStyle("-fx-font-size:16pt;");
+        l4.setPadding(new Insets(10,10,10,10));
         lv.getSelectionModel().selectedItemProperty().addListener(
-                (ov, old_val, new_val) -> selectedProductIndex = lv.getSelectionModel().getSelectedIndex());
-        this.add(lv, 1, 1);
+                (ov, old_val, new_val) -> selectedProduct = lv.getSelectionModel().getSelectedItem());
+        topBox2.getChildren().add(l4);
+        topBox.getChildren().addAll(comboBox, loadB, saveB);
+        topBox.setAlignment(Pos.CENTER);
+        topBox2.setAlignment(Pos.CENTER);
+        this.add(topBox2, 1, 1);
+        this.add(topBox, 2, 1);
+        this.add(lv, 1, 2);
         VBox v = new VBox();
-        this.add(v, 2, 1);
+        this.add(v, 2, 2);
         v.getChildren().addAll(l1, t1, l2, t2, l3, t3, addButton, deleteButton);
-        addButton.setStyle("-fx-background-color: #00AA22;");
+
+        addButton.setStyle("-fx-background-color: #c3c4c4, linear-gradient(#d6d6d6 50%, lightgreen 100%), radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%); -fx-background-radius: 30; -fx-background-insets: 0,1,1;  -fx-text-fill: black; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );");
         addButton.setMinSize(200, 30);
-        deleteButton.setStyle("-fx-background-color: #AA2200");
         deleteButton.setMinSize(200, 30);
+        deleteButton.setStyle("-fx-background-color: #c3c4c4, linear-gradient(#d6d6d6 50%, lightcoral 100%), radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%); -fx-background-radius: 30; -fx-background-insets: 0,1,1;  -fx-text-fill: black; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );");
         v.setSpacing(5.0);
-        v.setStyle("-fx-background-color: #AAAAAA;");
+        v.setStyle("-fx-background-color: lightgrey;");
         l1.setStyle("-fx-font-family: Avenir Ultra Light; -fx-font-size: 16;");
         l1.setPadding(new Insets(0,0,0,80));
         l2.setStyle("-fx-font-family: Avenir Ultra Light; -fx-font-size: 16;");
