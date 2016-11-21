@@ -1,3 +1,4 @@
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,18 +35,25 @@ public class ViewShop extends GridPane {
     private Label l2 = new Label("Price");
     private Label l3 = new Label("Count");
     private Label l4 = new Label("Product List");
-    private TextField t1 = new TextField();
-    private TextField t2 = new TextField();
-    private TextField t3 = new TextField();
+    private TextField nameTextField = new TextField();
+    private TextField priceTextField = new TextField();
+    private TextField countTextField = new TextField();
+
+    private SimpleStringProperty nameText = new SimpleStringProperty("");
+    private SimpleStringProperty priceText = new SimpleStringProperty("");
+    private SimpleStringProperty countText = new SimpleStringProperty("");
+
     public Button addButton = new Button("Add");
     public Button deleteButton = new Button("Delete");
     public int selectedProductIndex = 0;
     public Product selectedProduct = null;
+
     ObservableList<String> options = FXCollections.observableArrayList(
             "Binary",
             "Beans",
             "XStream"
     );
+
     private ComboBox comboBox = new ComboBox(options);
 
     public void bindData (ModelShop model) {
@@ -81,7 +89,10 @@ public class ViewShop extends GridPane {
         this.add(lv, 1, 2);
         VBox v = new VBox();
         this.add(v, 2, 2);
-        v.getChildren().addAll(l1, t1, l2, t2, l3, t3, addButton, deleteButton);
+        v.getChildren().addAll(l1, nameTextField,
+                                l2, priceTextField,
+                                l3, countTextField,
+                                addButton, deleteButton);
 
         addButton.setStyle("-fx-background-color: #c3c4c4, linear-gradient(#d6d6d6 50%, lightgreen 100%), radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%); -fx-background-radius: 30; -fx-background-insets: 0,1,1;  -fx-text-fill: black; -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );");
         addButton.setMinSize(200, 30);
@@ -96,30 +107,22 @@ public class ViewShop extends GridPane {
         l3.setStyle("-fx-font-family: Avenir Ultra Light; -fx-font-size: 16;");
         l3.setPadding(new Insets(0,0,0,80));
 
-
+        // input field bindings
+        nameTextField.textProperty().bindBidirectional(nameText);
+        priceTextField.textProperty().bindBidirectional(priceText);
+        countTextField.textProperty().bindBidirectional(countText);
     }
 
+    public String getProductName(){
+        return nameText.get();
+    }
 
+    public String getProductPrice(){
+        return priceText.get();
+    }
 
-    public Product getProduct() {
-        Product p = new Product();
-        p.setName(t1.getText());
-        if(!t2.getText().isEmpty()){
-            try {
-                p.setPrice(Double.parseDouble(t2.getText()));
-            } catch (final NumberFormatException ex) {
-                System.out.print("Feld 2 enthält keine Zahl");
-            }
-        }
-        if(!t3.getText().isEmpty()) {
-            try {
-                p.setQuantity(Integer.parseInt(t3.getText()));
-            } catch (final NumberFormatException ex) {
-                System.out.print("Feld 3 enthält keine Zahl");
-            }
-
-        }
-        return p;
+    public String getProductCount(){
+        return countText.get();
     }
 
     public void addEventHandler(EventHandler<ActionEvent> eventHandler) {

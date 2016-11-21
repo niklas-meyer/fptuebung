@@ -1,5 +1,5 @@
 import fpt.com.*;
-import fpt.com.Product;
+//import fpt.com.Product;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
@@ -25,8 +25,33 @@ public class ControllerShop implements EventHandler{
     @Override
     public void handle(Event event) {
         if(event.getSource().equals(view.addButton)) {
-            model.doAdd(1, view.getProduct());
-            model.productList.listIterator().forEachRemaining(product -> System.out.print(product.getName()));
+            /*
+                    Add Button:
+             */
+            Product p = new Product();
+            p.setName(view.getProductName());
+            String productPrice = view.getProductPrice();
+            boolean creationFailed = false;
+            if(productPrice != null){
+                try {
+                    p.setPrice(Double.parseDouble(productPrice));
+                } catch (final NumberFormatException ex) {
+                    creationFailed = true;
+                    System.out.print("Feld 2 enthält keine Zahl");
+                }
+            }
+            String productCount = view.getProductCount();
+            if(productCount != null) {
+                try {
+                    p.setQuantity(Integer.parseInt(productCount));
+                } catch (final NumberFormatException ex) {
+                    creationFailed = true;
+                    System.out.print("Feld 3 enthält keine Zahl");
+                }
+
+            }
+            if(!creationFailed)
+                 model.doAdd(1, p);
         }
         if(event.getSource().equals(view.deleteButton)) {
             model.doRemove((int)view.selectedProduct.getId());
