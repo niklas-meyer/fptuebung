@@ -43,9 +43,8 @@ public class ModelShop extends ModifiableObservableListBase {
 
     @Override
     protected Object doRemove(int index) {
-        //we need an if, so that the delete button will not throw an exception if there are no elements to delete
-            if(products.size()>0) {
-                products.remove(productList.findProductById(index));
+            if(productList.get(index) != null){
+                products.remove(productList.get(index));
                 productList.delete(productList.get(index));
             }
             return null;

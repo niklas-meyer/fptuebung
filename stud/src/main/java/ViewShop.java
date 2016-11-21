@@ -45,7 +45,6 @@ public class ViewShop extends GridPane {
 
     public Button addButton = new Button("Add");
     public Button deleteButton = new Button("Delete");
-    public int selectedProductIndex = 0;
     public Product selectedProduct = null;
 
     ObservableList<String> options = FXCollections.observableArrayList(
@@ -123,6 +122,14 @@ public class ViewShop extends GridPane {
 
     public String getProductCount(){
         return countText.get();
+    }
+
+    public Product getSelectedProduct(){
+        return selectedProduct;
+    }
+
+    public ListView<Product> getProductList(){
+        return lv;
     }
 
     public void addEventHandler(EventHandler<ActionEvent> eventHandler) {
