@@ -27,10 +27,10 @@ public class ViewShop extends GridPane {
 
 
     private ListView<Product> lv = new ListView<>();
-    private Button loadB = new Button("Load");
+    public Button loadB = new Button("Load");
     private HBox topBox = new HBox();
     private HBox topBox2 = new HBox();
-    private Button saveB = new Button("Save");
+    public Button saveB = new Button("Save");
     private Label l1 = new Label("Name");
     private Label l2 = new Label("Price");
     private Label l3 = new Label("Count");
@@ -53,7 +53,7 @@ public class ViewShop extends GridPane {
             "XStream"
     );
 
-    private ComboBox comboBox = new ComboBox(options);
+    public ComboBox comboBox = new ComboBox(options);
 
     public void bindData (ModelShop model) {
 
