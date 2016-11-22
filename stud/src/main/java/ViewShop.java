@@ -135,5 +135,7 @@ public class ViewShop extends GridPane {
     public void addEventHandler(EventHandler<ActionEvent> eventHandler) {
         addButton.addEventHandler(ActionEvent.ACTION, eventHandler);
         deleteButton.addEventHandler(ActionEvent.ACTION, eventHandler);
+        saveB.addEventHandler(ActionEvent.ACTION, eventHandler);
+        loadB.addEventHandler(ActionEvent.ACTION, eventHandler);
     }
 }
