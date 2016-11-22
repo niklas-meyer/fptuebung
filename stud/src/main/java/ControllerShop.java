@@ -41,40 +41,64 @@ public class ControllerShop implements EventHandler{
     @Override
     public void handle(Event event) {
         if(event.getSource().equals(view.addButton)) {
-            model.doAdd(1, view.getProduct());
-            model.productList.listIterator().forEachRemaining(product -> System.out.print(product.getName()));
-                       //ID nicht vergessen
+                        /*
+                    Add Button:
+             */
+            Product p = new Product();
+            p.setName(view.getProductName());
+            String productPrice = view.getProductPrice();
+            boolean creationFailed = false;
+            if(productPrice != null){
+                try {
+                    p.setPrice(Double.parseDouble(productPrice));
+                } catch (final NumberFormatException ex) {
+                    creationFailed = true;
+                    System.out.print("Feld 2 enthält keine Zahl");
+                }
+            }
+            String productCount = view.getProductCount();
+            if(productCount != null) {
+                try {
+                    p.setQuantity(Integer.parseInt(productCount));
+                } catch (final NumberFormatException ex) {
+                    creationFailed = true;
+                    System.out.print("Feld 3 enthält keine Zahl");
+                }
+
+            }
+            if(!creationFailed)
+                model.doAdd(1, p);
         }
         if(event.getSource().equals(view.deleteButton)) {
-                        if(view.getSelectedProduct != null){
-                                model.doRemove(view.getS)
-                                   }
-                }
-                if(event.getSource().equals(view.saveB)){
-                        if(view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Binary")){
-                               try {
-                                        list.get(0).open(null, new FileOutputStream("products.ser"));
-                                        for(Product p: model.products){
-                                                list.get(0).writeObject(p);
-                                            }
-                                        list.get(0).close();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                            }
-                        if(view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Beans")){
-                                try {
-                                        list.get(1).open(null, new FileOutputStream("products.xml"));
-                                        for(Product p: model.products){
-                                                list.get(1).writeObject(p);
-                                            }
-                                        list.get(1).close();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                            }
+            if(view.getSelectedProduct() != null)
+                 model.doRemove(view.getProductList().getItems().indexOf(view.getSelectedProduct()));
+        }
 
-               }
+        if(event.getSource().equals(view.saveB)){
+                if(view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Binary")){
+                       try {
+                                list.get(0).open(null, new FileOutputStream("products.ser"));
+                                for(Product p: model.products){
+                                        list.get(0).writeObject(p);
+                                    }
+                                list.get(0).close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                    }
+                if(view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Beans")){
+                        try {
+                                list.get(1).open(null, new FileOutputStream("products.xml"));
+                                for(Product p: model.products){
+                                        list.get(1).writeObject(p);
+                                    }
+                                list.get(1).close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                        }
+                }
+
+        }
+    }
 }
- }
 
