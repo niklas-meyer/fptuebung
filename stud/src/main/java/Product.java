@@ -14,8 +14,8 @@ import java.io.ObjectOutput;
 public class Product implements fpt.com.Product,java.io.Externalizable {
 
     private SimpleLongProperty id = new SimpleLongProperty();
-    private SimpleDoubleProperty price = new SimpleDoubleProperty();
-    private int quantity;
+    public SimpleDoubleProperty price = new SimpleDoubleProperty();
+    public int quantity;
     private SimpleStringProperty name= new SimpleStringProperty();
     private int serialId = 0;
 
@@ -28,9 +28,12 @@ public class Product implements fpt.com.Product,java.io.Externalizable {
         setName(name);
         setPrice(price);
         setQuantity(quantity);
+        setId(serialId);
+        serialId++;
     }
 
     public long getId() {
+
         return id.get();
     }
 
@@ -74,24 +77,23 @@ public class Product implements fpt.com.Product,java.io.Externalizable {
 
     @Override
     public ObservableValue<String> nameProperty() {
-        return null;
+        return name;
+
     }
 
     @Override
     public ObservableValue<Number> priceProperty() {
-        return null;
+        return price;
     }
 
     @Override
     public ObservableValue<Number> quantityProperty() {
-        return null;
+        return new SimpleIntegerProperty(quantity);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeLong((id.get()));
-        out.writeDouble((price.get()));
-        out.writeBytes((name.get()));
+        out.writeObject(this);
     }
 
 

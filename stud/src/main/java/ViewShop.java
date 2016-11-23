@@ -1,4 +1,8 @@
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.converter.NumberStringConverter;
 
 import javax.swing.*;
 
@@ -58,6 +63,7 @@ public class ViewShop extends GridPane {
     public void bindData (ModelShop model) {
 
         lv.setItems(model.products);
+
     }
 
     public ViewShop() {
@@ -78,7 +84,24 @@ public class ViewShop extends GridPane {
         l4.setStyle("-fx-font-size:16pt;");
         l4.setPadding(new Insets(10,10,10,10));
         lv.getSelectionModel().selectedItemProperty().addListener(
-                (ov, old_val, new_val) -> selectedProduct = lv.getSelectionModel().getSelectedItem());
+                (ObservableValue<? extends Product> ov, Product old_val, Product new_val) -> {
+                    selectedProduct = lv.getSelectionModel().getSelectedItem();
+
+                    //Mögliches Binding der Werte an die Texfelder
+
+                    /* if(!lv.getSelectionModel().isEmpty()) {
+                        nameTextField.textProperty().bind(selectedProduct.nameProperty());
+                        priceTextField.textProperty().bind(((SimpleDoubleProperty) selectedProduct.priceProperty()).asString());
+                        countTextField.textProperty().bind(((SimpleIntegerProperty) selectedProduct.quantityProperty()).asString());
+                    }else{
+                        nameTextField.textProperty().unbind();
+                        nameTextField.clear();
+                        priceTextField.textProperty().unbind();
+                        priceTextField.clear();
+                        countTextField.textProperty().unbind();
+                        countTextField.clear();
+                    }*/
+                });
         topBox2.getChildren().add(l4);
         topBox.getChildren().addAll(comboBox, loadB, saveB);
         topBox.setAlignment(Pos.CENTER);

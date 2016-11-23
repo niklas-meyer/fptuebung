@@ -29,6 +29,7 @@ public class ControllerShop implements EventHandler {
     public ControllerShop() {
         list.add(new BinaryStrategy());
         list.add(new XMLStrategy());
+        list.add(new XStreamStrategy());
     }
 
 
@@ -102,6 +103,17 @@ public class ControllerShop implements EventHandler {
                 }
             }
 
+            if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("XStream")) {
+                try {
+                    list.get(2).open(null, new FileOutputStream("XStreamProducts.xml"));
+                    list.get(2).writeObject(model.productList.get(0));
+
+                    list.get(2).close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
 
         }
         /* Loading productlist */
@@ -126,6 +138,21 @@ public class ControllerShop implements EventHandler {
                         }while(list.get(1).readObject() != null);
 
                     list.get(1).close();
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("XStream")) {
+                System.out.print("XSTREAM");
+                try {
+                    list.get(2).open(new FileInputStream("XstreamProducts.xml"), null);
+                    do{
+                        loadedProducts.add(list.get(2).readObject());
+                    }while(list.get(2).readObject() != null);
+
+                    list.get(2).close();
 
 
                 } catch (IOException e) {

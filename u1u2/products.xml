@@ -1,40 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <java version="1.8.0_111" class="java.beans.XMLDecoder">
  <object class="Product">
-  <void property="id">
-   <long>1</long>
-  </void>
   <void property="name">
-   <string>asdasd</string>
+   <string>Apfe</string>
   </void>
   <void property="price">
-   <double>2.0</double>
-  </void>
-  <void property="quantity">
-   <int>2</int>
-  </void>
- </object>
- <object class="Product">
-  <void property="id">
-   <long>12</long>
-  </void>
-  <void property="name">
-   <string>asd</string>
-  </void>
-  <void property="price">
-   <double>2.0</double>
-  </void>
-  <void property="quantity">
-   <int>2</int>
-  </void>
- </object>
- <null/>
- <object class="Product">
-  <void property="name">
-   <string>sdasdas</string>
-  </void>
-  <void property="price">
-   <double>2.0</double>
+   <double>22.0</double>
   </void>
   <void property="quantity">
    <int>3</int>
@@ -42,10 +13,10 @@
  </object>
  <object class="Product">
   <void property="name">
-   <string>asda</string>
+   <string>Apfe</string>
   </void>
   <void property="price">
-   <double>2.0</double>
+   <double>22.0</double>
   </void>
   <void property="quantity">
    <int>3</int>
@@ -53,10 +24,32 @@
  </object>
  <object class="Product">
   <void property="name">
-   <string>asdvv</string>
+   <string>Apfe</string>
   </void>
   <void property="price">
-   <double>31.0</double>
+   <double>22.0</double>
+  </void>
+  <void property="quantity">
+   <int>3</int>
+  </void>
+ </object>
+ <object class="Product">
+  <void property="name">
+   <string>Apfe</string>
+  </void>
+  <void property="price">
+   <double>22.0</double>
+  </void>
+  <void property="quantity">
+   <int>3</int>
+  </void>
+ </object>
+ <object class="Product">
+  <void property="name">
+   <string>Apfe</string>
+  </void>
+  <void property="price">
+   <double>22.0</double>
   </void>
   <void property="quantity">
    <int>3</int>
