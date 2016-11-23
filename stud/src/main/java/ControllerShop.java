@@ -109,7 +109,9 @@ public class ControllerShop implements EventHandler {
             if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Binary")) {
                 try {
                     list.get(0).open(new FileInputStream("products.ser"), null);
-                    loadedProducts.add(list.get(0).readObject());
+                    do{
+                        loadedProducts.add(list.get(1).readObject());
+                    }while(list.get(0).readObject() != null);
                     list.get(0).close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -119,15 +121,22 @@ public class ControllerShop implements EventHandler {
             if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Beans")) {
                 try {
                     list.get(1).open(new FileInputStream("products.xml"), null);
-                    loadedProducts.add(list.get(1).readObject());
+                        do{
+                            loadedProducts.add(list.get(1).readObject());
+                        }while(list.get(1).readObject() != null);
+
                     list.get(1).close();
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            for(fpt.com.Product p : loadedProducts){
-                System.out.println(p.getId()+" :" +p.getName());
-            }
+
+            model.products.clear();
+            model.productList = loadedProducts;
+            model.doSet(1, model.productList);
+
         }
     }
 }

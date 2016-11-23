@@ -4,10 +4,14 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 /**
  * Created by NiklasM on 05.11.16.
  */
-public class Product implements fpt.com.Product {
+public class Product implements fpt.com.Product,java.io.Externalizable {
 
     private SimpleLongProperty id = new SimpleLongProperty();
     private SimpleDoubleProperty price = new SimpleDoubleProperty();
@@ -81,5 +85,20 @@ public class Product implements fpt.com.Product {
     @Override
     public ObservableValue<Number> quantityProperty() {
         return null;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeLong((id.get()));
+        out.writeDouble((price.get()));
+        out.writeBytes((name.get()));
+    }
+
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        price.set(in.readDouble());
+        name.set((in.readObject().toString()));
+        id.set(in.readLong());
     }
 }

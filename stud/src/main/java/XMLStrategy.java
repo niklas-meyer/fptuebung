@@ -7,33 +7,58 @@ import java.io.*;
  */
 public class XMLStrategy implements fpt.com.SerializableStrategy {
 
-        FileInputStream fi;
-        XMLDecoder  xDec;
+        public FileInputStream fi;
+        public XMLDecoder  xDec;
         FileOutputStream fo;
         XMLEncoder xEnc;
-        Product readObject;
+        Product readObject = null;
+        private boolean inputOpen = false;
+        private boolean outputOpen = false;
 
-public fpt.com.Product readObject() throws IOException {
-    return readObject = (Product) xDec.readObject();
-    }
-
-    @Override
-public void writeObject(fpt.com.Product obj) throws IOException {
-        xEnc.writeObject (obj);
-        xEnc.flush();
+        public Product readObject() throws IOException {
+            try{
+                readObject = (Product) xDec.readObject();
+            }catch(ArrayIndexOutOfBoundsException e){
+                readObject = null;
+            }finally {
+                return readObject;
+            }
         }
 
-@Override
-public void close() throws IOException {
-        xEnc.close();
+            @Override
+        public void writeObject(fpt.com.Product obj) throws IOException {
+
+                xEnc.writeObject (obj);
+                xEnc.flush();
+                }
+
+        @Override
+        public void close() throws IOException {
+                if(inputOpen){
+                    xDec.close();
+                        inputOpen = false;
+                }
+                if(outputOpen) {
+                        xEnc.close();
+                        outputOpen = false;
+                }
         }
 
-@Override
-public void open(InputStream input, OutputStream output) throws IOException {
-        fo = (FileOutputStream) output;
-        xEnc = new XMLEncoder(fo);
-        fi = (FileInputStream) input;
-        xDec = new XMLDecoder(fi);
+        @Override
+        public void open(InputStream input, OutputStream output) throws IOException {
+                if(output != null) {
+                        fo = (FileOutputStream) output;
+                        this.xEnc = new XMLEncoder(fo);
+                        outputOpen = true;
+
+                }
+                if(input != null) {
+                        fi = (FileInputStream) input;
+                        xDec = new XMLDecoder(fi);
+                        inputOpen = true;
+                }
+
+
         }
 }
 

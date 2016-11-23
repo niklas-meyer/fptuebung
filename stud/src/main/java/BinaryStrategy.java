@@ -14,13 +14,19 @@ public class BinaryStrategy implements fpt.com.SerializableStrategy {
     FileOutputStream fo;
     ObjectOutputStream os;
     Product readObject;
+    private boolean inputOpen = false;
+    private boolean outputOpen = false;
 
     public fpt.com.Product readObject() throws IOException {
-        try  {
-            readObject = (Product) is.readObject();
-        } catch (ClassNotFoundException | IOException e) { e . printStackTrace () ;
+        try {
+            readObject = ((Product) is.readObject());
+        } catch (ClassNotFoundException | IOException | ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+            readObject= null;
+        } finally {
+            return readObject;
+
         }
-        return null;
     }
 
     @Override
@@ -36,13 +42,30 @@ public class BinaryStrategy implements fpt.com.SerializableStrategy {
 
     @Override
     public void close() throws IOException {
-        os.close();
+        if(inputOpen){
+            is.close();
+            inputOpen = false;
+        }
+        if(outputOpen) {
+            os.close();
+            outputOpen = false;
+        }
     }
 
     @Override
     public void open(InputStream input, OutputStream output) throws IOException {
+        if(output != null) {
             fo = (FileOutputStream) output;
             os = new ObjectOutputStream(fo);
+            outputOpen = true;
+
+        }
+        if(input != null) {
+            fi = (FileInputStream) input;
+            is = new ObjectInputStream(fi);
+            inputOpen = true;
+        }
+
 
     }
 }
