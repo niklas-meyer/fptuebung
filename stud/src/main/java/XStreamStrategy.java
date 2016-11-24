@@ -9,25 +9,28 @@ import fpt.com.Product;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class XStreamStrategy implements SerializableStrategy{
     FileWriter fileWriter;
     FileReader fileReader;
     Product readObject;
+    Path path = Paths.get("xproducts.xml");
 
     @Override
     public Product readObject() throws IOException {
+        fileReader = new FileReader(path.getFileName().toString());
         return readObject = (Product) createXStream(Product.class).fromXML(fileReader) ;
     }
 
     @Override
     public void writeObject(Product obj) throws IOException {
+
         createXStream(Product.class).toXML (obj , fileWriter ) ;
     }
 
     @Override
     public void close() throws IOException {
-        fileReader.close();
         fileWriter.close();
     }
 
@@ -38,7 +41,7 @@ public class XStreamStrategy implements SerializableStrategy{
     public void open(Path p) throws IOException{
         fileWriter = new FileWriter(p.getFileName().toString());
 
-        fileReader = new FileReader(p.getFileName().toString());
+
 
     }
 

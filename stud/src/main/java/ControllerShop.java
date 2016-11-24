@@ -131,7 +131,6 @@ public class ControllerShop implements EventHandler {
             if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Beans")) {
                 serializablePattern.setStrategy(new XMLStrategy());
                 Path p = Paths.get("products.xml");
-                serializablePattern.open(p);
                 Product product = null;
                 while( (product = serializablePattern.readObject()) != null ){
                     loadedProducts.add(product);
