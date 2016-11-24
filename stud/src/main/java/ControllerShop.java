@@ -25,11 +25,13 @@ public class ControllerShop implements EventHandler {
     ViewShop view;
     ProductList loadedProducts = new ProductList();
     ArrayList<SerializableStrategy> list = new ArrayList<>();
+    IDGenerator idGenerator;
 
     public ControllerShop() {
         list.add(new BinaryStrategy());
         list.add(new XMLStrategy());
         list.add(new XStreamStrategy());
+        idGenerator = new IDGenerator();
     }
 
 
@@ -67,6 +69,14 @@ public class ControllerShop implements EventHandler {
                 }
 
             }
+            try{
+                p.setId(idGenerator.getId());
+            }catch(IDOverflowException ex){
+                creationFailed = true;
+                System.out.print("ID is greater than 999999");
+            }
+
+
             if (!creationFailed)
                 model.doAdd(1, p);
         }
