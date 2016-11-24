@@ -89,7 +89,8 @@ public class ViewShop extends GridPane {
 
                     //Mögliches Binding der Werte an die Texfelder
 
-                    /* if(!lv.getSelectionModel().isEmpty()) {
+                    /*
+                     if(!lv.getSelectionModel().isEmpty()) {
                         nameTextField.textProperty().bind(selectedProduct.nameProperty());
                         priceTextField.textProperty().bind(((SimpleDoubleProperty) selectedProduct.priceProperty()).asString());
                         countTextField.textProperty().bind(((SimpleIntegerProperty) selectedProduct.quantityProperty()).asString());

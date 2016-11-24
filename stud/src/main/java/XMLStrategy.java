@@ -25,12 +25,10 @@ public class XMLStrategy implements fpt.com.SerializableStrategy {
             xmlDecoder = new XMLDecoder(fileInputStream);
 
             try{
-                readObject = (Product) xmlDecoder.readObject();
-            }catch(ArrayIndexOutOfBoundsException e){
+                return readObject = (Product) xmlDecoder.readObject();
+            }catch(ArrayIndexOutOfBoundsException e) {
                 e.printStackTrace();
-                readObject = null;
-            }finally {
-                return readObject;
+                return readObject = null;
             }
         }
 

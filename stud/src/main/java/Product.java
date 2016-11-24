@@ -17,19 +17,24 @@ public class Product implements fpt.com.Product,java.io.Externalizable {
     public SimpleDoubleProperty price = new SimpleDoubleProperty();
     public int quantity;
     private SimpleStringProperty name= new SimpleStringProperty();
-    private int serialId = 0;
 
     public Product(){
-        setId(serialId);
-        serialId++;
+        try{
+            setId(IDGenerator.getId());
+        }catch(IDOverflowException e){
+            e.printStackTrace();
+        }
     }
 
     public Product(String name, Double price, Integer quantity){
         setName(name);
         setPrice(price);
         setQuantity(quantity);
-        setId(serialId);
-        serialId++;
+        try{
+            setId(IDGenerator.getId());
+        }catch(IDOverflowException e){
+            e.printStackTrace();
+        }
     }
 
     public long getId() {

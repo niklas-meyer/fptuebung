@@ -27,14 +27,13 @@ public class ControllerShop implements EventHandler {
     ViewShop view;
     ProductList loadedProducts = new ProductList();
     ArrayList<SerializableStrategy> list = new ArrayList<>();
-    IDGenerator idGenerator;
     SerializablePattern serializablePattern;
 
     public ControllerShop() {
         list.add(new BinaryStrategy());
         list.add(new XMLStrategy());
         list.add(new XStreamStrategy());
-        idGenerator = new IDGenerator();
+
         // Standard: Binary strategy
         serializablePattern = new SerializablePattern(new BinaryStrategy());
     }
@@ -75,7 +74,7 @@ public class ControllerShop implements EventHandler {
 
             }
             try{
-                p.setId(idGenerator.getId());
+                p.setId(IDGenerator.getId());
             }catch(IDOverflowException ex){
                 creationFailed = true;
                 System.out.print("ID is greater than 999999");
@@ -138,7 +137,7 @@ public class ControllerShop implements EventHandler {
             }
 
             if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("XStream")) {
-                serializablePattern.setStrategy(new XMLStrategy());
+                serializablePattern.setStrategy(new XStreamStrategy());
                 Path p = Paths.get("xproducts.xml");
                 serializablePattern.open(p);
                 Product product = null;

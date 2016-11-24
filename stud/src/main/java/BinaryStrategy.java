@@ -17,8 +17,7 @@ public class BinaryStrategy implements fpt.com.SerializableStrategy {
     ObjectOutputStream objectOutputStream;
     Product readObject;
     private  Path path;
-    private boolean inputOpen = false;
-    private boolean outputOpen = false;
+
 
     public fpt.com.Product readObject() throws IOException {
 
@@ -28,10 +27,7 @@ public class BinaryStrategy implements fpt.com.SerializableStrategy {
         if(objectOutputStream != null)
             objectOutputStream.close();
         try {
-            System.out.print("a");
             readObject = (Product)objectInputStream.readObject();
-
-            System.out.print(readObject().getName());
         } catch (Exception e){
             e.printStackTrace();
         }

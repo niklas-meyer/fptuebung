@@ -36,7 +36,7 @@ public class ProductList extends java.util.ArrayList<fpt.com.Product> implements
 
     @Override
     public int size() {
-        return this.size();
+        return this.toArray().length;
     }
 
 
@@ -47,8 +47,13 @@ public class ProductList extends java.util.ArrayList<fpt.com.Product> implements
 
     @Override
     public Product findProductByName(String name) {
-
-        return null;
+        Product searchedProduct = null;
+        for(fpt.com.Product p : this){
+            if(p.getName().equals(name.toString())){
+                searchedProduct =(Product) p;
+            }
+        }
+        return searchedProduct;
     }
 
     @Override

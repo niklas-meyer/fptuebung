@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
  */
 public class ModelShop extends ModifiableObservableListBase {
     public ProductList productList = new ProductList();
-    public int index = 0;
     ObservableList<Product> products = FXCollections.observableArrayList();
 
     public ModelShop(){

@@ -52,7 +52,7 @@ public class SerializablePattern {
         Product product = null;
         try{
             product = (Product)strategy.readObject();
-        }catch (Exception e){
+        }catch (IOException |ArrayIndexOutOfBoundsException e){
             e.printStackTrace();
         }
         return  product;
