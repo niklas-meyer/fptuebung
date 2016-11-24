@@ -6,54 +6,40 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import fpt.com.*;
 import fpt.com.Product;
 
+
 import java.io.*;
+import java.nio.file.Path;
 
-public class XStreamStrategy extends XStream implements SerializableStrategy{
-    XStream xstream;
-    FileWriter fw;
-    FileReader fr;
+public class XStreamStrategy implements SerializableStrategy{
+    FileWriter fileWriter;
+    FileReader fileReader;
     Product readObject;
-    private boolean outputOpen = false;
-    private boolean inputOpen = false;
 
-    public XStreamStrategy(){
-         xstream = new XStream ( new DomDriver() );
-    }
     @Override
-    public fpt.com.Product readObject() throws IOException {
-        return readObject = (Product) xstream.fromXML(fr) ;
+    public Product readObject() throws IOException {
+        return readObject = (Product) createXStream(Product.class).fromXML(fileReader) ;
     }
 
     @Override
     public void writeObject(Product obj) throws IOException {
-        if(outputOpen)
-        xstream.toXML (obj , fw ) ;
-        else
-            System.out.print("KEIN OUTPUT OFFEN");
+        createXStream(Product.class).toXML (obj , fileWriter ) ;
     }
 
     @Override
     public void close() throws IOException {
-        if(inputOpen){
-            fr.close();
-            inputOpen = false;
-        }
-        if(outputOpen) {
-            fw.close();
-            outputOpen = false;
-        }
+        fileReader.close();
+        fileWriter.close();
     }
 
     @Override
     public void open(InputStream input, OutputStream output) throws IOException {
-        if (output != null) {
-            fw = new FileWriter(output.toString());
-            outputOpen = true;
-        }
-        if (input != null) {
-            fr = new FileReader(input.toString());
-            inputOpen = true;
-        }
+    }
+
+    public void open(Path p) throws IOException{
+        fileWriter = new FileWriter(p.getFileName().toString());
+
+        fileReader = new FileReader(p.getFileName().toString());
+
     }
 
 }

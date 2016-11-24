@@ -1,7 +1,9 @@
 import fpt.com.*;
 import fpt.com.Product;
+import sun.misc.IOUtils;
 
 import java.io.*;
+import java.nio.file.Path;
 
 /**
  * Created by NiklasM on 21.11.16.
@@ -9,63 +11,67 @@ import java.io.*;
 
 public class BinaryStrategy implements fpt.com.SerializableStrategy {
 
-    FileInputStream fi;
-    ObjectInputStream is;
-    FileOutputStream fo;
-    ObjectOutputStream os;
+    FileInputStream fileInputStream;
+    ObjectInputStream objectInputStream;
+    FileOutputStream fileOutputStream;
+    ObjectOutputStream objectOutputStream;
     Product readObject;
+    private  Path path;
     private boolean inputOpen = false;
     private boolean outputOpen = false;
 
     public fpt.com.Product readObject() throws IOException {
-        try {
-            readObject = ((Product) is.readObject());
-        } catch (ClassNotFoundException | IOException | ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-            readObject= null;
-        } finally {
-            return readObject;
 
+        readObject = null;
+        if(fileOutputStream != null)
+            fileOutputStream.close();
+        if(objectOutputStream != null)
+            objectOutputStream.close();
+        try {
+            System.out.print("a");
+            readObject = (Product)objectInputStream.readObject();
+
+            System.out.print(readObject().getName());
+        } catch (Exception e){
+            e.printStackTrace();
         }
+        return  readObject;
     }
 
     @Override
     public void writeObject(Product obj) throws IOException {
-        try
-        {
-            os.writeObject (obj);
-            os.flush();
-        }
-        catch (IOException e) { e . printStackTrace () ;
-        }
+        objectOutputStream.writeObject (obj);
+        objectOutputStream.flush();
     }
 
     @Override
     public void close() throws IOException {
-        if(inputOpen){
-            is.close();
-            inputOpen = false;
-        }
-        if(outputOpen) {
-            os.close();
-            outputOpen = false;
-        }
+        if(fileInputStream != null)
+            fileInputStream.close();
+        if(objectInputStream != null)
+            objectInputStream.close();
+        if(fileOutputStream != null)
+             fileOutputStream.close();
+        if(objectOutputStream != null)
+            objectOutputStream.close();
+    }
+
+
+    public void open(InputStream input, OutputStream output) throws IOException {
+
     }
 
     @Override
-    public void open(InputStream input, OutputStream output) throws IOException {
-        if(output != null) {
-            fo = (FileOutputStream) output;
-            os = new ObjectOutputStream(fo);
-            outputOpen = true;
+    public void open(Path p) throws IOException{
+        path = p;
+        fileOutputStream = new FileOutputStream(path.getFileName().toString());
+        objectOutputStream = new ObjectOutputStream(fileOutputStream);
 
-        }
-        if(input != null) {
-            fi = (FileInputStream) input;
-            is = new ObjectInputStream(fi);
-            inputOpen = true;
-        }
+        fileInputStream = new FileInputStream(path.getFileName().toString());
+        objectInputStream = new ObjectInputStream(fileInputStream);
+    }
 
-
+    public  void setPath(Path p){
+        path = p;
     }
 }

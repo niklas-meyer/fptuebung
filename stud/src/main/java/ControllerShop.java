@@ -10,9 +10,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.function.Consumer;
-
+import java.nio.file.Path;
+import java.nio.file.Paths;
 /**
 
 
@@ -26,12 +28,15 @@ public class ControllerShop implements EventHandler {
     ProductList loadedProducts = new ProductList();
     ArrayList<SerializableStrategy> list = new ArrayList<>();
     IDGenerator idGenerator;
+    SerializablePattern serializablePattern;
 
     public ControllerShop() {
         list.add(new BinaryStrategy());
         list.add(new XMLStrategy());
         list.add(new XStreamStrategy());
         idGenerator = new IDGenerator();
+        // Standard: Binary strategy
+        serializablePattern = new SerializablePattern(new BinaryStrategy());
     }
 
 
@@ -88,85 +93,58 @@ public class ControllerShop implements EventHandler {
         }
 
         /* Saving productlist */
-        if (event.getSource().equals(view.saveB)) {
+        if (event.getSource().equals(view.saveB) && view.comboBox.getSelectionModel().getSelectedItem() != null) {
+
+            /* Binary */
             if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Binary")) {
-                try {
-                    list.get(0).open(null, new FileOutputStream("products.ser"));
-                    for (Product p : model.products) {
-                        list.get(0).writeObject(p);
-                    }
-                    list.get(0).close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                serializablePattern.setStrategy(new BinaryStrategy());
+                Path p = Paths.get("products.ser");
+                serializablePattern.write(model.products.subList(0, model.products.size()),p);
             }
-
+            /* Beans */
             if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Beans")) {
-                try {
-                    list.get(1).open(null, new FileOutputStream("products.xml"));
-                    for (Product p : model.products) {
-                        list.get(1).writeObject(p);
-                    }
-                    list.get(1).close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                serializablePattern.setStrategy(new XMLStrategy());
+                Path p = Paths.get("products.xml");
+                serializablePattern.write(model.products.subList(0, model.products.size()),p);
             }
-
+             /* XStreams */
             if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("XStream")) {
-                try {
-                    list.get(2).open(null, new FileOutputStream("XStreamProducts.xml"));
-                    list.get(2).writeObject(model.productList.get(0));
-
-                    list.get(2).close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                serializablePattern.setStrategy(new XStreamStrategy());
+                Path p = Paths.get("xproducts.xml");
+                serializablePattern.write(model.products.subList(0, model.products.size()), p);
             }
-
-
         }
+
         /* Loading productlist */
-        if (event.getSource().equals(view.loadB)) {
+        if (event.getSource().equals(view.loadB) && view.comboBox.getSelectionModel().getSelectedItem() != null) {
+
             if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Binary")) {
-                try {
-                    list.get(0).open(new FileInputStream("products.ser"), null);
-                    do{
-                        loadedProducts.add(list.get(1).readObject());
-                    }while(list.get(0).readObject() != null);
-                    list.get(0).close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                serializablePattern.setStrategy(new BinaryStrategy());
+                Path p = Paths.get("products.ser");
+                serializablePattern.open(p);
+                Product product = null;
+                while ((product = serializablePattern.readObject()) != null) {
+                    loadedProducts.add(product);
                 }
             }
 
             if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Beans")) {
-                try {
-                    list.get(1).open(new FileInputStream("products.xml"), null);
-                        do{
-                            loadedProducts.add(list.get(1).readObject());
-                        }while(list.get(1).readObject() != null);
-
-                    list.get(1).close();
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                serializablePattern.setStrategy(new XMLStrategy());
+                Path p = Paths.get("products.xml");
+                serializablePattern.open(p);
+                Product product = null;
+                while( (product = serializablePattern.readObject()) != null ){
+                    loadedProducts.add(product);
                 }
             }
+
             if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("XStream")) {
-                System.out.print("XSTREAM");
-                try {
-                    list.get(2).open(new FileInputStream("XstreamProducts.xml"), null);
-                    do{
-                        loadedProducts.add(list.get(2).readObject());
-                    }while(list.get(2).readObject() != null);
-
-                    list.get(2).close();
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                serializablePattern.setStrategy(new XMLStrategy());
+                Path p = Paths.get("xproducts.xml");
+                serializablePattern.open(p);
+                Product product = null;
+                while( (product = serializablePattern.readObject()) != null ){
+                    loadedProducts.add(product);
                 }
             }
 
