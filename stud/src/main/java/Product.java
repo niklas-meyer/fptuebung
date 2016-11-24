@@ -1,3 +1,10 @@
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
+import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
+import com.thoughtworks.xstream.converters.extended.PropertyEditorCapableConverter;
+import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -7,12 +14,16 @@ import javafx.beans.value.ObservableValue;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Serializable;
 
 /**
  * Created by NiklasM on 05.11.16.
  */
+@XStreamAlias("Waren")
+
 public class Product implements fpt.com.Product,java.io.Externalizable {
 
+    //XStream Annotations hier durch Converter ersetzt
     private SimpleLongProperty id = new SimpleLongProperty();
     public SimpleDoubleProperty price = new SimpleDoubleProperty();
     public int quantity;
@@ -27,18 +38,13 @@ public class Product implements fpt.com.Product,java.io.Externalizable {
     }
 
     public Product(String name, Double price, Integer quantity){
+        super();
         setName(name);
         setPrice(price);
         setQuantity(quantity);
-        try{
-            setId(IDGenerator.getId());
-        }catch(IDOverflowException e){
-            e.printStackTrace();
-        }
     }
 
     public long getId() {
-
         return id.get();
     }
 

@@ -51,7 +51,7 @@ public class ControllerShop implements EventHandler {
          /* Adding product  */
         if (event.getSource().equals(view.addButton)) {
 
-            Product p = new Product();
+            Product p = new Product(); //Creating a new product automatically results in adding an ID
             p.setName(view.getProductName());
             String productPrice = view.getProductPrice();
             boolean creationFailed = false;
@@ -73,12 +73,7 @@ public class ControllerShop implements EventHandler {
                 }
 
             }
-            try{
-                p.setId(IDGenerator.getId());
-            }catch(IDOverflowException ex){
-                creationFailed = true;
-                System.out.print("ID is greater than 999999");
-            }
+
 
 
             if (!creationFailed)
@@ -130,6 +125,7 @@ public class ControllerShop implements EventHandler {
             if (view.comboBox.getSelectionModel().getSelectedItem().toString().equals("Beans")) {
                 serializablePattern.setStrategy(new XMLStrategy());
                 Path p = Paths.get("products.xml");
+                serializablePattern.open(p);
                 Product product = null;
                 while( (product = serializablePattern.readObject()) != null ){
                     loadedProducts.add(product);

@@ -26,7 +26,11 @@ public class XStreamStrategy implements SerializableStrategy{
     @Override
     public void writeObject(Product obj) throws IOException {
 
-        createXStream(Product.class).toXML (obj , fileWriter ) ;
+        XStream x = createXStream(Product.class);
+        x.registerConverter(new ProductConverter());
+
+        x.toXML (obj , fileWriter ) ;
+
     }
 
     @Override
