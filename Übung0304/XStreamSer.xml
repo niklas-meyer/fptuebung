@@ -1,0 +1,22 @@
+<Produkte>
+  <Produkt id="000001">
+    <name>Hund</name>
+    <preis>120.00</preis>
+  </Produkt>
+  <Produkt id="000002">
+    <name>Hund</name>
+    <preis>120.00</preis>
+  </Produkt>
+  <Produkt id="000003">
+    <name>Hund</name>
+    <preis>120.00</preis>
+  </Produkt>
+  <Produkt id="000004">
+    <name>Hund</name>
+    <preis>120.00</preis>
+  </Produkt>
+  <Produkt id="000005">
+    <name>Hund</name>
+    <preis>120.00</preis>
+  </Produkt>
+</Produkte>
