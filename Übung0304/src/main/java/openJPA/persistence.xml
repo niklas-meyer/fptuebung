@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<persistence>
+    <persistence-unit name="openjpa">
+        <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+        <class>model.Product</class>
+        <properties>
+            <property name="openjpa.ConnectionDriverName" value="org.postgresql.Driver" />
+            <property name="openjpa.ConnectionURL" value="jdbc:postgresql://java.is.uni-due.de/ws1011" />
+            <property name="openjpa.ConnectionUserName" value="ws1011" />
+            <property name="openjpa.ConnectionPassword" value="ftpw10" />
+            <property name="openjpa.RuntimeUnenhancedClasses" value="supported" />
+        </properties>
+    </persistence-unit>
+</persistence>
+
