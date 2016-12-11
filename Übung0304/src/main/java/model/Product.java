@@ -9,20 +9,35 @@ import java.io.ObjectOutput;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.property.*;
 
+import javax.persistence.*;
+
+import org.apache.openjpa.persistence.Persistent;
+import org.apache.openjpa.persistence.jdbc.Strategy;
+
 /**
  * Created by Surya on 01.11.2016.
  */
 
 //Name, ID, Stückzahl & Preis
 
+@Entity()
+@Table(name = "product")
 public class Product implements fpt.com.Product, Externalizable {
 
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY,  generator = "products_SEQ")
 	private long id;
+    @Persistent
+    @Strategy ("fpt.com.db.DoublePropertyValueHandler")
     private SimpleDoubleProperty price = new SimpleDoubleProperty();
+    @Persistent
+    @Strategy ("fpt.com.db.IntegerPropertyValueHandler")
     private SimpleIntegerProperty quantity = new SimpleIntegerProperty();
+    @Persistent
+    @Strategy ("fpt.com.db.StringPropertyValueHandler")
     private SimpleStringProperty name = new SimpleStringProperty();
-   
-    @Override
+
+
     public long getId() { return id; }
 
     @Override
