@@ -6,6 +6,7 @@ import org.apache.openjpa.persistence.OpenJPAPersistence;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,43 +15,70 @@ import java.util.Map;
 /**
  * Created by NiklasM on 11.12.16.
  */
-public class openJPAConnector {
+public class OpenJPAConnector {
 
     /**
      * @param args
      */
     public static void main(String[] args) {
-        Product p = new Product();
-        p.setName("Apfl");
-        p.setId(68945879);
-        EntityManagerFactory fac = getWithoutConfig();
-        //EntityManagerFactory fac = Persistence.createEntityManagerFactory(
-        //		"openjpa", System.getProperties());
-
-        EntityManager e = fac.createEntityManager();
-
-        EntityTransaction t = e.getTransaction();
-        t.begin();
-        e.persist(p);
-        t.commit(); // all ok commit
-        // all Data is saved in database now
-        t.begin();
-        // QBE
-        for (Object o : e.createQuery("SELECT * FROM Product")
-                .getResultList()) {
-            Product z = (Product) o;
-            System.out.println(z.getId() + ": " + z.getName());
-        }
-        t.commit(); // all ok commit
-
-        e.close();
-        fac.close();
 
     }
 
+    /**
+     * Inserts a product into the database
+     * @param product Product
+     * @return ID of the product
+     */
+    public static long insert(Product product){
+        EntityManagerFactory fac = getFactoryWithoutConfig();
+        EntityManager e = fac.createEntityManager();
+        EntityTransaction t = e.getTransaction();
 
-    public static EntityManagerFactory getWithoutConfig() {
+        t.begin();
+        e.persist(product);
+        t.commit();
 
+        e.close();
+        fac.close();
+        return product.getId();
+    }
+
+    /**
+     * Returns a Product in DB by its id
+     * @param id ID
+     * @return Product
+     */
+    public static Product read(long id){
+        EntityManagerFactory fac = getFactoryWithoutConfig();
+        EntityManager e = fac.createEntityManager();
+        EntityTransaction t = e.getTransaction();
+
+        Product product = null;
+        t.begin();
+        List resultList = e.createQuery("SELECT x FROM Product x WHERE x.id =" + id).getResultList();
+        for(Object o : resultList){
+            product = (Product) o;
+        }
+        t.commit();
+
+        e.close();
+        fac.close();
+        return product;
+    }
+
+    /**
+     * Creates the Factory using the persistence.xml
+     * @return EntityManagerFactory
+     */
+    public static EntityManagerFactory getFactoryWithConfig(){
+        return Persistence.createEntityManagerFactory("openjpa", System.getProperties());
+    }
+
+    /**
+     * Creates the Factory without using the persistence.xml
+     * @return EntityManagerFactory
+     */
+    public static EntityManagerFactory getFactoryWithoutConfig() {
         Map<String, String> map = new HashMap<String, String>();
 
         map.put("openjpa.ConnectionURL",

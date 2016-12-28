@@ -21,7 +21,7 @@ import org.apache.openjpa.persistence.jdbc.Strategy;
 //Name, ID, Stückzahl & Preis
 
 @Entity()
-@Table(name = "product")
+@Table(name = "products")
 public class Product implements fpt.com.Product, Externalizable {
 
     @Id

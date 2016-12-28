@@ -18,8 +18,11 @@ public class JDBCConnector {
     public  static  void main(String args[]){
 
         JDBCConnector jdbcConnector = new JDBCConnector();
-        //jdbcConnector.printInfos();
+        jdbcConnector.printInfos();
+
        // System.out.println(jdbcConnector.insert("wudrst",10,2));
+
+        /*
         Product p = jdbcConnector.read(11453);
         if(p != null){
             System.out.println(p.getId());
@@ -27,6 +30,7 @@ public class JDBCConnector {
             System.out.println(p.getPrice());
             System.out.println(p.getQuantity());
         }
+        */
     }
 
     private void printInfos(){
