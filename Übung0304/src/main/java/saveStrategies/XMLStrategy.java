@@ -1,4 +1,4 @@
-package serialization;
+package saveStrategies;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;

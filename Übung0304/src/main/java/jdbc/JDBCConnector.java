@@ -3,6 +3,10 @@ package jdbc;
 import model.Product;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by Henry on 02.12.2016.
@@ -18,8 +22,7 @@ public class JDBCConnector {
     public  static  void main(String args[]){
 
         JDBCConnector jdbcConnector = new JDBCConnector();
-        jdbcConnector.printInfos();
-
+        //jdbcConnector.printInfos();
        // System.out.println(jdbcConnector.insert("wudrst",10,2));
 
         /*
@@ -33,7 +36,7 @@ public class JDBCConnector {
         */
     }
 
-    private void printInfos(){
+    public void printInfos(){
         try (Connection con = DriverManager.getConnection(url, user, password))
         {
             DatabaseMetaData databaseMetaData = con.getMetaData();
@@ -59,7 +62,7 @@ public class JDBCConnector {
         { e.printStackTrace() ; }
     }
 
-    private long insert(String name, double price, int quantity){
+    public long insert(String name, double price, int quantity){
         try (Connection con = DriverManager.getConnection(url, user, password);
               PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO products (name, price, quantity) VALUES(?,?,?)",
                                                                             Statement.RETURN_GENERATED_KEYS);
@@ -82,12 +85,12 @@ public class JDBCConnector {
         return  -1;
     }
 
-    private void insert(Product product){
+    public void insert(Product product){
         long id = insert(product.getName(), product.getPrice(), product.getQuantity());
         product.setId(id);
     }
 
-    private Product read(long productID){
+    public Product read(long productID){
         try (Connection con = DriverManager.getConnection(url, user, password);
              PreparedStatement preparedStatement = con.prepareStatement("SELECT id, name, price, quantity FROM products WHERE id=? ");
         )
@@ -113,5 +116,37 @@ public class JDBCConnector {
         }
 
         return  null;
+    }
+
+    public Iterator<Product> read(int limit){
+        ArrayList<Product> productArrayList = new ArrayList<Product>();
+        try (Connection con = DriverManager.getConnection(url, user, password);
+             PreparedStatement preparedStatement = con.prepareStatement("SELECT id, name, price, quantity " +
+                     "FROM products " +
+                     "ORDER BY id " +
+                     "DESC LIMIT " + limit);
+        )
+        {
+
+            ResultSet rs = preparedStatement.executeQuery();
+            Product p;
+
+
+            while (rs.next()){
+                p = new Product();
+                p.setId(rs.getLong(1));
+                p.setName(rs.getString(2));
+                p.setPrice(rs.getDouble(3));
+                p.setQuantity(rs.getInt(4));
+                productArrayList.add(p);
+            }
+
+
+        }catch (SQLException e)
+        {
+            e.printStackTrace() ;
+        }
+
+        return  productArrayList.iterator();
     }
 }

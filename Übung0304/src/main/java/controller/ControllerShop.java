@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import fpt.com.SerializableStrategy;
+import fpt.com.db.AbstractDatabaseStrategy;
 import javafx.event.ActionEvent;
 import model.*;
 import generator.IDGenerator;
 import view.*;
-import serialization.*;
-import model.*;
+import saveStrategies.*;
 
 public class ControllerShop {
 
@@ -20,9 +20,16 @@ public class ControllerShop {
 
     public void link(ModelShop model, ViewShop view) {
 
+        // Serialization Strategies
+
         SerializableStrategy bin = new BinaryStrategy();
         SerializableStrategy xml = new XMLStrategy();
         SerializableStrategy xstream = new XStreamStrategy();
+
+        // Database Strategies
+
+        SerializableStrategy jdbc = new JDBCStrategy();
+        SerializableStrategy openJPA = new OpenJPAStrategy();
 
         strat = bin;
 
@@ -79,6 +86,12 @@ public class ControllerShop {
                     case 2:
                         strat = xstream;
                         break;
+                    case 3:
+                        strat = openJPA;
+                        break;
+                    case 4:
+                        strat = jdbc;
+                        break;
                 }
                 ;
             }
@@ -113,9 +126,9 @@ public class ControllerShop {
 
         Iterator<Product> iteratorp = model.iterator();
 
-        if (model.size() < 5)
+        if (model.size() < 2)
             throw new Exception(
-                    "Die Warenliste sollte mindestens 5 Objekte enthalten");
+                    "Die Warenliste sollte mindestens 2 Objekte enthalten");
         while (iteratorp.hasNext()) {
             try {
                 strat.writeObject(iteratorp.next());
