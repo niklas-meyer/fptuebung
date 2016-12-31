@@ -30,6 +30,8 @@ public class JDBCStrategy extends AbstractDatabaseStrategy {
         }
         if(productIterator.hasNext())
             return productIterator.next();
+
+        productIterator = null;
         return null;
     }
 

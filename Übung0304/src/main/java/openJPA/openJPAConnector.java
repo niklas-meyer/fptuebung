@@ -7,10 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by NiklasM on 11.12.16.
@@ -21,7 +18,12 @@ public class OpenJPAConnector {
      * @param args
      */
     public static void main(String[] args) {
-
+        OpenJPAConnector openJPAConnector = new OpenJPAConnector();
+        Iterator<Product> p = openJPAConnector.read(10);
+        while (p.hasNext()){
+            Product product = p.next();
+            System.out.println(product.getName() + "  " + product.getId());
+        }
     }
 
     /**
@@ -29,7 +31,7 @@ public class OpenJPAConnector {
      * @param product Product
      * @return ID of the product
      */
-    public static long insert(Product product){
+    public long insert(Product product){
         EntityManagerFactory fac = getFactoryWithoutConfig();
         EntityManager e = fac.createEntityManager();
         EntityTransaction t = e.getTransaction();
@@ -48,7 +50,7 @@ public class OpenJPAConnector {
      * @param id ID
      * @return Product
      */
-    public static Product read(long id){
+    public Product read(long id){
         EntityManagerFactory fac = getFactoryWithoutConfig();
         EntityManager e = fac.createEntityManager();
         EntityTransaction t = e.getTransaction();
@@ -67,10 +69,35 @@ public class OpenJPAConnector {
     }
 
     /**
+     * Returns the last n entries in db
+     * @param count amount of elements
+     * @return
+     */
+    public Iterator<Product> read(int count){
+        ArrayList<Product> productArrayList = new ArrayList<Product>();
+        EntityManagerFactory fac = getFactoryWithoutConfig();
+        EntityManager e = fac.createEntityManager();
+        EntityTransaction t = e.getTransaction();
+
+        t.begin();
+        List resultList = e.createQuery("SELECT x FROM Product x ORDER BY x.id DESC")
+                            .setMaxResults(count)
+                            .getResultList();
+        for(Object object : resultList){
+            productArrayList.add((Product) object);
+        }
+        t.commit();
+
+        e.close();
+        fac.close();
+        return productArrayList.iterator();
+    }
+
+    /**
      * Creates the Factory using the persistence.xml
      * @return EntityManagerFactory
      */
-    public static EntityManagerFactory getFactoryWithConfig(){
+    public EntityManagerFactory getFactoryWithConfig(){
         return Persistence.createEntityManagerFactory("openjpa", System.getProperties());
     }
 
@@ -78,7 +105,7 @@ public class OpenJPAConnector {
      * Creates the Factory without using the persistence.xml
      * @return EntityManagerFactory
      */
-    public static EntityManagerFactory getFactoryWithoutConfig() {
+    public EntityManagerFactory getFactoryWithoutConfig() {
         Map<String, String> map = new HashMap<String, String>();
 
         map.put("openjpa.ConnectionURL",

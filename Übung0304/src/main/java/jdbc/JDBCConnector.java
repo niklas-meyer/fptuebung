@@ -131,7 +131,6 @@ public class JDBCConnector {
             ResultSet rs = preparedStatement.executeQuery();
             Product p;
 
-
             while (rs.next()){
                 p = new Product();
                 p.setId(rs.getLong(1));
@@ -140,7 +139,6 @@ public class JDBCConnector {
                 p.setQuantity(rs.getInt(4));
                 productArrayList.add(p);
             }
-
 
         }catch (SQLException e)
         {

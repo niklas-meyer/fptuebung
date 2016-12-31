@@ -8,14 +8,12 @@ import fpt.com.SerializableStrategy;
 import fpt.com.db.AbstractDatabaseStrategy;
 import javafx.event.ActionEvent;
 import model.*;
-import generator.IDGenerator;
 import view.*;
 import saveStrategies.*;
 
 public class ControllerShop {
 
     ModelShop model;
-    IDGenerator idGeneartor;
     SerializableStrategy strat;
 
     public void link(ModelShop model, ViewShop view) {
@@ -33,7 +31,6 @@ public class ControllerShop {
 
         strat = bin;
 
-        idGeneartor = new IDGenerator();
         this.model = model;
 
         view.setList(model);
@@ -48,11 +45,7 @@ public class ControllerShop {
                     p.setName(view.getNameInput());
                     p.setPrice(Double.parseDouble(view.getPriceInput()));
                     p.setQuantity(Integer.parseInt(view.getCountInput()));
-                    try {
-                        p.setId(idGeneartor.generateId());
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
+
                     model.add(p);
                 }
 
@@ -102,12 +95,10 @@ public class ControllerShop {
     public void load() {
 
         model.clear();
-        idGeneartor.clear();
 
         fpt.com.Product product;
         try {
             while ((product = strat.readObject()) != null) {
-            	idGeneartor.addId(product.getId());
                 model.add((Product) product);
             }
         } catch (IOException e1) {
