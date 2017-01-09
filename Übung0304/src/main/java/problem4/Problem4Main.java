@@ -8,6 +8,9 @@ import java.util.List;
  * Created by Leona on 18.12.2016.
  */
 public class Problem4Main {
+
+
+
     public static void main(String[] args)throws Exception{
 
 
@@ -32,5 +35,7 @@ public class Problem4Main {
         Acquisition.cashpoints.get(0).start();
 
     }
+
+
 }
 
