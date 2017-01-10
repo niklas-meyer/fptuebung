@@ -32,11 +32,8 @@ public class Acquisition implements Runnable {
                 e.printStackTrace();
             }
 
-            openNewCashpoints();
             closeCashpoints();
         }
-
-
 
     }
 
@@ -69,21 +66,16 @@ public class Acquisition implements Runnable {
         return false;
     }
 
-    private void openNewCashpoints(){
-        for(int i = 0; i < cashpoints.length; i++){
-            if(cashpoints[i] != null && cashpoints[i].getWaitingQueue().size() == 6){
-                //Open new Cashpoint if possible:
-                for(int j = 0; j < cashpoints.length; j++) {
-                    if (cashpoints[j] == null ) {
-                        Cashpoint c = new Cashpoint(j, new ArrayList<>(), balance);
-                        cashpoints[j] = c;
-                        Thread thread = new Thread(c);
-                        thread.start();
-                        System.out.println("Kasse " + j + " wird geöffnet");
-                        break;
-                    }
-                }
 
+    public void openNewCashpoint(){
+        for(int i = 0; i < cashpoints.length; i++) {
+            if (cashpoints[i] == null ) {
+                Cashpoint c = new Cashpoint(i, new ArrayList<>(), balance, this);
+                cashpoints[i] = c;
+                Thread thread = new Thread(c);
+                thread.start();
+                System.out.println("Kasse " + i + " wird geöffnet");
+                break;
             }
         }
     }
@@ -101,7 +93,7 @@ public class Acquisition implements Runnable {
         balance = new Balance(new ReentrantLock());
         cashpoints = new Cashpoint[Problem4Main.MAX_CASHPOINTS];
 
-        Cashpoint c = new Cashpoint(0, new ArrayList<>(), balance);
+        Cashpoint c = new Cashpoint(0, new ArrayList<>(), balance, this);
         cashpoints[0] = c;
         System.out.println("Kasse 0 wird geöffnet");
         Thread thread = new Thread(c);

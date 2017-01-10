@@ -11,18 +11,21 @@ import static java.lang.Thread.sleep;
  */
 public class Cashpoint implements Runnable {
 
+    Acquisition acquisition;
+
     List<String> waitingQueue = new ArrayList<>();
     int nr;
     int totalCustomers = 0;
-    boolean hasOpened = false;
+    public boolean hasOpened = false;
     Balance balance;
 
     private DecimalFormat cashFormat = new DecimalFormat("#,##");
 
-    public Cashpoint(int nr, List<String> waitingQueue, Balance balance ) {
+    public Cashpoint(int nr, List<String> waitingQueue, Balance balance, Acquisition acquisition ) {
         this.waitingQueue = waitingQueue;
         this.nr = nr;
         this.balance = balance;
+        this.acquisition = acquisition;
         balance.addCashpoint(this);
     }
 
@@ -47,7 +50,10 @@ public class Cashpoint implements Runnable {
     public void addToWaitingQueue(String customer){
         totalCustomers++;
         waitingQueue.add(customer);
-        System.out.println(customer + " hinzugefügt (Kasse " + nr + ")" );
+        System.out.println("Kunde hinzugefügt (Kasse " + nr + ") - Schlange: " + getWaitingQueueSize());
+
+        if(waitingQueue.size() == 6)
+            acquisition.openNewCashpoint();
     }
 
     public boolean isCloseable(){
@@ -72,15 +78,15 @@ public class Cashpoint implements Runnable {
             double sale = Math.random() *50;
             sale = Double.valueOf(cashFormat.format(sale));
             balance.addValue(this, sale);
-            System.out.println(waitingQueue.get(0) + " abgearbeitet " + "(+" + sale +" €)" + "(Kasse " + nr + ") - in Schlange: " + getWaitingQueueSize());
 
-
-
-            System.out.println(balance.getInfos());
-
+            System.out.println(waitingQueue.get(0) + " abgearbeitet " + "(+" + sale +" €)" + "(Kasse " + nr + ") - in Schlange: " + (getWaitingQueueSize() - 1));
             waitingQueue.remove(waitingQueue.get(0));
+
+
+
         }
         System.out.println("Kasse Nr. " + nr + " schließt.");
+        hasOpened = false;
     }
 
     private  void openCashpoint(){
