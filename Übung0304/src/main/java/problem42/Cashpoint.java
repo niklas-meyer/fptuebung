@@ -1,12 +1,13 @@
 package problem42;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
 
 /**
- * Created by Leona on 18.12.2016.
+ * Created by Henry on 08.01.2016.
  */
 public class Cashpoint implements Runnable {
 
@@ -14,10 +15,15 @@ public class Cashpoint implements Runnable {
     int nr;
     int totalCustomers = 0;
     boolean hasOpened = false;
+    Balance balance;
 
-    public Cashpoint(int nr, List<String> waitingQueue ) {
+    private DecimalFormat cashFormat = new DecimalFormat("#,##");
+
+    public Cashpoint(int nr, List<String> waitingQueue, Balance balance ) {
         this.waitingQueue = waitingQueue;
         this.nr = nr;
+        this.balance = balance;
+        balance.addCashpoint(this);
     }
 
     public List<String> getWaitingQueue(){
@@ -55,26 +61,35 @@ public class Cashpoint implements Runnable {
         openCashpoint();
 
         while (!waitingQueue.isEmpty()) {
-            System.out.println(waitingQueue.get(0) + " abgearbeitet (Kasse " + nr + ") - in Schlange: " + getWaitingQueueSize());
-
             try {
                 int wait = (int) (Math.random() * 5) + 6; //Abarbeitung dauert zwischen 6 bis 10 Sekunden.
                 sleep(wait * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+
+            double sale = Math.random() *50;
+            sale = Double.valueOf(cashFormat.format(sale));
+            balance.addValue(this, sale);
+            System.out.println(waitingQueue.get(0) + " abgearbeitet " + "(+" + sale +" €)" + "(Kasse " + nr + ") - in Schlange: " + getWaitingQueueSize());
+
+
+
+            System.out.println(balance.getInfos());
+
             waitingQueue.remove(waitingQueue.get(0));
         }
         System.out.println("Kasse Nr. " + nr + " schließt.");
     }
 
     private  void openCashpoint(){
-        System.out.println("Kasse Nr. " + nr + " öffnet.");
         try {
             sleep(6000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("Kasse Nr. " + nr + " offen.");
         hasOpened = true;
     }
 

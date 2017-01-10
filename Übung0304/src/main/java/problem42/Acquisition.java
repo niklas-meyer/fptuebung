@@ -1,25 +1,22 @@
 package problem42;
 
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
 
 /**
- * Created by Leona on 18.12.2016.
+ * Created by Henry on 08.01.2016.
  */
 public class Acquisition implements Runnable {
 
     Cashpoint[] cashpoints;
+    Balance balance;
 
     @Override
     public void run() {
 
-        cashpoints = new Cashpoint[Problem4Main.MAX_CASHPOINTS];
-
-        Cashpoint c = new Cashpoint(0, new ArrayList<>());
-        cashpoints[0] = c;
-        Thread thread = new Thread(c);
-        thread.start();
+        initiate();
 
         while (!stopAcquisition()){
 
@@ -78,10 +75,11 @@ public class Acquisition implements Runnable {
                 //Open new Cashpoint if possible:
                 for(int j = 0; j < cashpoints.length; j++) {
                     if (cashpoints[j] == null ) {
-                        Cashpoint c = new Cashpoint(j, new ArrayList<>());
+                        Cashpoint c = new Cashpoint(j, new ArrayList<>(), balance);
                         cashpoints[j] = c;
                         Thread thread = new Thread(c);
                         thread.start();
+                        System.out.println("Kasse " + j + " wird geöffnet");
                         break;
                     }
                 }
@@ -99,5 +97,15 @@ public class Acquisition implements Runnable {
         }
     }
 
+    private  void initiate(){
+        balance = new Balance(new ReentrantLock());
+        cashpoints = new Cashpoint[Problem4Main.MAX_CASHPOINTS];
+
+        Cashpoint c = new Cashpoint(0, new ArrayList<>(), balance);
+        cashpoints[0] = c;
+        System.out.println("Kasse 0 wird geöffnet");
+        Thread thread = new Thread(c);
+        thread.start();
+    }
 
 }

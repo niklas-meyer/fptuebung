@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Leona on 18.12.2016.
+ * Created by Henry on 08.01.2016.
  */
 public class Problem4Main {
 
