@@ -1,6 +1,7 @@
 package problem42;
 
 import java.util.*;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
@@ -12,6 +13,7 @@ public class Acquisition implements Runnable {
 
     Cashpoint[] cashpoints;
     Balance balance;
+    public Lock lock;
 
     @Override
     public void run() {
@@ -32,7 +34,6 @@ public class Acquisition implements Runnable {
                 e.printStackTrace();
             }
 
-            closeCashpoints();
         }
 
     }
@@ -69,7 +70,7 @@ public class Acquisition implements Runnable {
 
     public void openNewCashpoint(){
         for(int i = 0; i < cashpoints.length; i++) {
-            if (cashpoints[i] == null ) {
+            if (cashpoints[i] == null  ) {
                 Cashpoint c = new Cashpoint(i, new ArrayList<>(), balance, this);
                 cashpoints[i] = c;
                 Thread thread = new Thread(c);
@@ -80,18 +81,14 @@ public class Acquisition implements Runnable {
         }
     }
 
-    private void closeCashpoints(){
-        for(int i = 0; i < cashpoints.length; i++){
-            if(cashpoints[i] != null && cashpoints[i].isCloseable()){
-                System.out.println("Kasse " + cashpoints[i].getNr() + " geschlossen.");
-                cashpoints[i] = null;
-            }
-        }
+    public void closeCashpoint(Cashpoint cashpoint){
+        cashpoints[cashpoint.getNr()] = null;
     }
 
     private  void initiate(){
-        balance = new Balance(new ReentrantLock());
+        balance = new Balance();
         cashpoints = new Cashpoint[Problem4Main.MAX_CASHPOINTS];
+        lock = new ReentrantLock();
 
         Cashpoint c = new Cashpoint(0, new ArrayList<>(), balance, this);
         cashpoints[0] = c;

@@ -12,40 +12,28 @@ import java.util.stream.Collectors;
  */
 public class Balance {
 
-    Lock lock;
 
     private List<CashSave> cashSaves = new ArrayList<>();
 
-    public Balance (Lock lock){
-        this.lock = lock;
-    }
-
     public void addCashpoint(Cashpoint cashpoint){
-        lock.lock();
-        cashSaves.add(new CashSave(cashpoint.getNr(),0d));
-        lock.unlock();
-        /*
-        if(!cashpointMap.containsKey(cashpoint.getNr())){
-            lock.lock();
-            cashpointMap.put(cashpoint.getNr(),0d);
-            lock.unlock();
-        }
-        */
+        if(!cashpointContained(cashpoint))
+             cashSaves.add(new CashSave(cashpoint.getNr(),0d));
     }
 
     public void addValue(Cashpoint cashpoint, double value){
-        lock.lock();
         for(CashSave c : cashSaves){
             if(c.id == cashpoint.getNr()){
                 c.add(value);
                 break;
             }
         }
+        Collections.sort(cashSaves);
         Collections.reverse(cashSaves);
-        System.out.println(getInfos());
-        lock.unlock();
     }
 
+    public void printInfos(){
+        System.out.println(getInfos());
+    }
 
     private String getInfos(){
         String info = "";
@@ -53,6 +41,15 @@ public class Balance {
             info += "Kasse " + c.id + ": " + c.value+ " €; ";
         }
         return info;
+    }
+
+    private boolean cashpointContained(Cashpoint cashpoint){
+        boolean contained = false;
+        for(CashSave c : cashSaves){
+            if(c.id == cashpoint.getNr())
+                contained = true;
+        }
+        return contained;
     }
 
 }

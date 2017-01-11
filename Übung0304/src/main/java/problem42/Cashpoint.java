@@ -26,7 +26,9 @@ public class Cashpoint implements Runnable {
         this.nr = nr;
         this.balance = balance;
         this.acquisition = acquisition;
+        acquisition.lock.lock();
         balance.addCashpoint(this);
+        acquisition.lock.unlock();
     }
 
     public List<String> getWaitingQueue(){
@@ -51,16 +53,10 @@ public class Cashpoint implements Runnable {
         totalCustomers++;
         waitingQueue.add(customer);
         System.out.println("Kunde hinzugefügt (Kasse " + nr + ") - Schlange: " + getWaitingQueueSize());
-
         if(waitingQueue.size() == 6)
             acquisition.openNewCashpoint();
     }
 
-    public boolean isCloseable(){
-        if(hasOpened && getWaitingQueueSize() == 0)
-            return  true;
-        return false;
-    }
 
     @Override
     public void run() {
@@ -77,16 +73,18 @@ public class Cashpoint implements Runnable {
 
             double sale = Math.random() *50;
             sale = Double.valueOf(cashFormat.format(sale));
+
+            acquisition.lock.lock();
             balance.addValue(this, sale);
-
-            System.out.println(waitingQueue.get(0) + " abgearbeitet " + "(+" + sale +" €)" + "(Kasse " + nr + ") - in Schlange: " + (getWaitingQueueSize() - 1));
+            System.out.println("Kunde abgearbeitet " + "(+" + sale +" €)" + "(Kasse " + nr + ") - in Schlange: " + (getWaitingQueueSize() - 1));
+            balance.printInfos();
+            acquisition.lock.unlock();
             waitingQueue.remove(waitingQueue.get(0));
-
-
 
         }
         System.out.println("Kasse Nr. " + nr + " schließt.");
         hasOpened = false;
+        acquisition.closeCashpoint(this);
     }
 
     private  void openCashpoint(){
@@ -95,7 +93,7 @@ public class Cashpoint implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Kasse Nr. " + nr + " offen.");
+        System.out.println("Kasse " + nr + " offen.");
         hasOpened = true;
     }
 
