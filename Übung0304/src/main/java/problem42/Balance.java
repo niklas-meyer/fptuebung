@@ -12,14 +12,22 @@ import java.util.stream.Collectors;
  */
 public class Balance {
 
-
     private List<CashSave> cashSaves = new ArrayList<>();
 
+    /**
+     * Adds a cashpoint to the saved ones (if its not already contained)
+     * @param cashpoint
+     */
     public void addCashpoint(Cashpoint cashpoint){
         if(!cashpointContained(cashpoint))
              cashSaves.add(new CashSave(cashpoint.getNr(),0d));
     }
 
+    /**
+     * Adds a sale to the total value in the cashpoint
+     * @param cashpoint
+     * @param value
+     */
     public void addValue(Cashpoint cashpoint, double value){
         for(CashSave c : cashSaves){
             if(c.id == cashpoint.getNr()){
@@ -31,10 +39,17 @@ public class Balance {
         Collections.reverse(cashSaves);
     }
 
+    /**
+     * Prints out information on all cashpoints with their values in
+     */
     public void printInfos(){
         System.out.println(getInfos());
     }
 
+    /**
+     * Creates a String with all cashpoints + values sorted by their value
+     * @return
+     */
     private String getInfos(){
         String info = "";
         for(CashSave c : cashSaves){
@@ -43,6 +58,11 @@ public class Balance {
         return info;
     }
 
+    /**
+     * Checks if a selected cashpoint is already contained in the saved list
+     * @param cashpoint
+     * @return
+     */
     private boolean cashpointContained(Cashpoint cashpoint){
         boolean contained = false;
         for(CashSave c : cashSaves){

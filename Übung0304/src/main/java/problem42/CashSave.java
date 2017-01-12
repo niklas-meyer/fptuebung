@@ -13,10 +13,19 @@ public class CashSave implements Comparable<CashSave> {
         this.value = value;
     }
 
+    /**
+     * adds a value to the current amount in cashpoint
+     * @param value
+     */
     public void add(double value){
         this.value += value;
     }
 
+    /**
+     * Method to sort the cashpoints by their values
+     * @param cashSave
+     * @return
+     */
     @Override
     public int compareTo(CashSave cashSave) {
         return (int)(value - cashSave.value);

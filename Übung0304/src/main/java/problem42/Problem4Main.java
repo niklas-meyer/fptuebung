@@ -9,6 +9,9 @@ import java.util.List;
  */
 public class Problem4Main {
 
+    /*
+        Total amount of cashpoints that can be opened
+     */
     public static final int MAX_CASHPOINTS = 6;
 
     public static void main(String[] args){

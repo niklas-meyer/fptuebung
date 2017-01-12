@@ -19,6 +19,9 @@ public class Cashpoint implements Runnable {
     public boolean hasOpened = false;
     Balance balance;
 
+    /*
+        Converts the sale into a monetary format
+     */
     private DecimalFormat cashFormat = new DecimalFormat("#,##");
 
     public Cashpoint(int nr, List<String> waitingQueue, Balance balance, Acquisition acquisition ) {
@@ -31,24 +34,34 @@ public class Cashpoint implements Runnable {
         acquisition.lock.unlock();
     }
 
-    public List<String> getWaitingQueue(){
-        return waitingQueue;
-    }
-
+    /**
+     * Returns the amount of customers in the waitingqueue of the cashpoint
+     * @return
+     */
     public int getWaitingQueueSize(){
         return waitingQueue.size();
     }
 
-
+    /**
+     * The ID of the cashpoint
+     * @return
+     */
     public int getNr(){
         return nr;
     }
 
+    /**
+     * Returns the amount of all considered customers since the cashpoint opened
+     * @return
+     */
     public int getTotalCustomers(){
         return totalCustomers;
     }
 
-
+    /**
+     * Adds a customer to the waitingqueue
+     * @param customer name of the customer
+     */
     public void addToWaitingQueue(String customer){
         totalCustomers++;
         waitingQueue.add(customer);
@@ -67,7 +80,8 @@ public class Cashpoint implements Runnable {
 
         while (!waitingQueue.isEmpty()) {
             try {
-                int wait = (int) (Math.random() * 5) + 6; //Abarbeitung dauert zwischen 6 bis 10 Sekunden.
+                // Processing a customer lasts 6 to 10 seconds
+                int wait = (int) (Math.random() * 5) + 6;
                 sleep(wait * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -77,12 +91,15 @@ public class Cashpoint implements Runnable {
             double sale = Math.random() *50;
             sale = Double.valueOf(cashFormat.format(sale));
 
+            /*
+                Critical area
+             */
             acquisition.lock.lock();
             balance.addValue(this, sale);
             System.out.println("Kunde abgearbeitet " + "(+" + sale +" €)" + "(Kasse " + nr + ") - in Schlange: " + (getWaitingQueueSize() - 1));
             balance.printInfos();
-            acquisition.lock.unlock();
             waitingQueue.remove(waitingQueue.get(0));
+            acquisition.lock.unlock();
 
         }
         System.out.println("Kasse Nr. " + nr + " schließt.");
@@ -90,6 +107,9 @@ public class Cashpoint implements Runnable {
         acquisition.closeCashpoint(this);
     }
 
+    /**
+     * Waits 6 seconds until customers are processed
+     */
     private  void openCashpoint(){
         try {
             sleep(6000);

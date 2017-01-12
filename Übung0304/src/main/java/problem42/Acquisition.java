@@ -73,17 +73,7 @@ public class Acquisition implements Runnable {
         }
 
     }
-    /*
-    private boolean stopAcquisition(){
-        for(int i = 0; i < cashpoints.length; i++){
-            if(cashpoints[i] != null && cashpoints[i].getWaitingQueueSize() == 8){
-                System.out.println("Keine Kunden werden mehr aufgenommen");
-                return true;
-            }
-        }
-        return false;
-    }
-*/
+
     /**
      * Searches for the first not opened/created Cashpoint and opens it
      */
