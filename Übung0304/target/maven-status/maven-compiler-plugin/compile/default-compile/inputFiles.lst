@@ -1,27 +1,34 @@
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\controller\ControllerCustomer.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\generator\IDOverflow.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\Main.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\fpt\com\db\AbstractPropertyValueHandler.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\fpt\com\SerializableStrategy.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\model\Product.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\model\Order.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\serialization\BinaryStrategy.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\model\ModelShop.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\controller\ProductHandler.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\fpt\com\db\DoublePropertyValueHandler.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\fpt\com\Product.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\MainClass2.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\view\ViewShop.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\generator\IDGenerator.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\controller\ControllerShop.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\fpt\com\Order.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\model\ProductConverter.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\fpt\com\ProductList.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\serialization\XMLStrategy.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\fpt\com\db\StringPropertyValueHandler.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\model\ProductList.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\fpt\com\db\IntegerPropertyValueHandler.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\fpt\com\ExternalizableReflectionConverter.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\view\ViewCustomer.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\serialization\XStreamStrategy.java
-C:\Users\Henry\Desktop\u1u2-3.1\u1u2 3.1\src\main\java\fpt\com\db\AbstractDatabaseStrategy.java
+E:\FPT_Git\Übung0304\src\main\java\problem4\Problem4Main.java
+E:\FPT_Git\Übung0304\src\main\java\fpt\com\SerializableStrategy.java
+E:\FPT_Git\Übung0304\src\main\java\fpt\com\db\DoublePropertyValueHandler.java
+E:\FPT_Git\Übung0304\src\main\java\controller\ControllerCustomer.java
+E:\FPT_Git\Übung0304\src\main\java\model\ModelShop.java
+E:\FPT_Git\Übung0304\src\main\java\saveStrategies\OpenJPAStrategy.java
+E:\FPT_Git\Übung0304\src\main\java\fpt\com\Product.java
+E:\FPT_Git\Übung0304\src\main\java\fpt\com\Order.java
+E:\FPT_Git\Übung0304\src\main\java\saveStrategies\XMLStrategy.java
+E:\FPT_Git\Übung0304\src\main\java\Main.java
+E:\FPT_Git\Übung0304\src\main\java\openJPA\OpenJPAConnector.java
+E:\FPT_Git\Übung0304\src\main\java\view\ViewCustomer.java
+E:\FPT_Git\Übung0304\src\main\java\problem4\Acquisition.java
+E:\FPT_Git\Übung0304\src\main\java\problem4\Cashpoint.java
+E:\FPT_Git\Übung0304\src\main\java\model\ProductList.java
+E:\FPT_Git\Übung0304\src\main\java\controller\ControllerShop.java
+E:\FPT_Git\Übung0304\src\main\java\fpt\com\ExternalizableReflectionConverter.java
+E:\FPT_Git\Übung0304\src\main\java\controller\ProductHandler.java
+E:\FPT_Git\Übung0304\src\main\java\fpt\com\db\AbstractPropertyValueHandler.java
+E:\FPT_Git\Übung0304\src\main\java\model\Product.java
+E:\FPT_Git\Übung0304\src\main\java\view\ViewShop.java
+E:\FPT_Git\Übung0304\src\main\java\saveStrategies\BinaryStrategy.java
+E:\FPT_Git\Übung0304\src\main\java\saveStrategies\XStreamStrategy.java
+E:\FPT_Git\Übung0304\src\main\java\problem4\Balance.java
+E:\FPT_Git\Übung0304\src\main\java\model\ProductConverter.java
+E:\FPT_Git\Übung0304\src\main\java\fpt\com\db\StringPropertyValueHandler.java
+E:\FPT_Git\Übung0304\src\main\java\fpt\com\ProductList.java
+E:\FPT_Git\Übung0304\src\main\java\fpt\com\db\IntegerPropertyValueHandler.java
+E:\FPT_Git\Übung0304\src\main\java\MainClass2.java
+E:\FPT_Git\Übung0304\src\main\java\problem4\CashSave.java
+E:\FPT_Git\Übung0304\src\main\java\fpt\com\db\AbstractDatabaseStrategy.java
+E:\FPT_Git\Übung0304\src\main\java\model\Order.java
+E:\FPT_Git\Übung0304\src\main\java\saveStrategies\JDBCStrategy.java
+E:\FPT_Git\Übung0304\src\main\java\jdbc\JDBCConnector.java

@@ -1,11 +1,8 @@
-package problem42;
+package problem4;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.stream.Collectors;
 
 /**
  * Created by Henry on 10.01.2017.

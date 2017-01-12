@@ -1,4 +1,4 @@
-package problem42;
+package problem4;
 
 /**
  * Created by Henry on 10.01.2017.

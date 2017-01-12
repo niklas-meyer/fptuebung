@@ -1,41 +1,24 @@
 package problem4;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
- * Created by Leona on 18.12.2016.
+ * Created by Henry on 08.01.2016.
  */
 public class Problem4Main {
 
+    /*
+        Total amount of cashpoints that can be opened
+     */
+    public static final int MAX_CASHPOINTS = 6;
+
+    public static void main(String[] args){
 
 
-    public static void main(String[] args)throws Exception{
+        Acquisition acquisition = new Acquisition();
+        Thread t1 = new Thread(acquisition);
+
+        t1.start();
 
 
-        Acquisition a1 = new Acquisition();
-        Cashpoint c1 = new Cashpoint(1);
-        c1.open = true;
-        Cashpoint c2 = new Cashpoint(2);
-        Cashpoint c3 = new Cashpoint(3);
-        Cashpoint c4 = new Cashpoint(4);
-        Cashpoint c5 = new Cashpoint(5);
-        Cashpoint c6 = new Cashpoint(6);
-
-        Acquisition.cashpoints.add(c1);
-        Acquisition.cashpoints.add(c2);
-        Acquisition.cashpoints.add(c3);
-        Acquisition.cashpoints.add(c4);
-        Acquisition.cashpoints.add(c5);
-        Acquisition.cashpoints.add(c6);
-
-
-        a1.start();
-        Acquisition.cashpoints.get(0).start();
 
     }
-
-
 }
-

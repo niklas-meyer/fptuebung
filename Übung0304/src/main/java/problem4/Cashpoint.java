@@ -1,65 +1,123 @@
 package problem4;
 
-
-
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
 
 /**
- * Created by Leona on 18.12.2016.
+ * Created by Henry on 08.01.2016.
  */
-public class Cashpoint extends Thread implements Runnable  {
-    public List<String> waitingQueue = new ArrayList<>();
-    public boolean open = false;
-    public boolean full = false;
-    public int cashpointNr = 200;
-    public boolean alreadyStarted = false;
-    private Lock lock = new ReentrantLock();
+public class Cashpoint implements Runnable {
 
-  /*  public Cashpoint(){
+    Acquisition acquisition;
 
+    List<String> waitingQueue = new ArrayList<>();
+    int nr;
+    int totalCustomers = 0;
+    public boolean hasOpened = false;
+    Balance balance;
+
+    /*
+        Converts the sale into a monetary format
+     */
+    private DecimalFormat cashFormat = new DecimalFormat("#,##");
+
+    public Cashpoint(int nr, List<String> waitingQueue, Balance balance, Acquisition acquisition ) {
+        this.waitingQueue = waitingQueue;
+        this.nr = nr;
+        this.balance = balance;
+        this.acquisition = acquisition;
+        acquisition.lock.lock();
+        balance.addCashpoint(this);
+        acquisition.lock.unlock();
     }
-    public Cashpoint(ThreadGroup g,int nr){
-        super(g,new Cashpoint(nr));
-    }*/
 
-    public Cashpoint(int nr){
-        cashpointNr = nr;
+    /**
+     * Returns the amount of customers in the waitingqueue of the cashpoint
+     * @return
+     */
+    public int getWaitingQueueSize(){
+        return waitingQueue.size();
     }
 
-    public void AddToQueue(String s){
-        waitingQueue.add(s);
+    /**
+     * The ID of the cashpoint
+     * @return
+     */
+    public int getNr(){
+        return nr;
     }
+
+    /**
+     * Returns the amount of all considered customers since the cashpoint opened
+     * @return
+     */
+    public int getTotalCustomers(){
+        return totalCustomers;
+    }
+
+    /**
+     * Adds a customer to the waitingqueue
+     * @param customer name of the customer
+     */
+    public void addToWaitingQueue(String customer){
+        totalCustomers++;
+        waitingQueue.add(customer);
+        System.out.println("Kunde hinzugefügt (Kasse " + nr + ") - Schlange: " + getWaitingQueueSize());
+        if(waitingQueue.size() == 6)
+            acquisition.openNewCashpoint();
+        if(waitingQueue.size() == 8){
+            acquisition.stopAcquisition();
+        }
+    }
+
+
     @Override
     public void run() {
-        while(open) {
-            lock.lock();
-            if(waitingQueue.size()!= 0) {
+        openCashpoint();
 
-                try {
-                    int wait = (int) (Math.random() * 3) + 4; //Abarbeitung dauert zwischen 6 bis 10 Sekunden.
-                    sleep(wait * 1000);
-                    //setPriority(cashpointNr);
-                    String s = waitingQueue.get(0);
-                    waitingQueue.remove(waitingQueue.get(0));
-                    System.out.print(s + " an Kasse " + cashpointNr +" ... abgearbeitet (Wartend: " + waitingQueue + " ), Priority: "+this.getPriority()+"\n");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-
+        while (!waitingQueue.isEmpty()) {
+            try {
+                // Processing a customer lasts 6 to 10 seconds
+                int wait = (int) (Math.random() * 5) + 6;
+                sleep(wait * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            lock.unlock();
+
+
+            double sale = Math.random() *50;
+            sale = Double.valueOf(cashFormat.format(sale));
+
+            /*
+                Critical area
+             */
+            acquisition.lock.lock();
+            balance.addValue(this, sale);
+            System.out.println("Kunde abgearbeitet " + "(+" + sale +" €)" + "(Kasse " + nr + ") - in Schlange: " + (getWaitingQueueSize() - 1));
+            balance.printInfos();
+            waitingQueue.remove(waitingQueue.get(0));
+            acquisition.lock.unlock();
+
         }
-        open = false;
-        if(alreadyStarted)
-            System.out.print("Kasse "+cashpointNr+" permanent geschlossen");
+        System.out.println("Kasse Nr. " + nr + " schließt.");
+        hasOpened = false;
+        acquisition.closeCashpoint(this);
     }
 
+    /**
+     * Waits 6 seconds until customers are processed
+     */
+    private  void openCashpoint(){
+        try {
+            sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Kasse " + nr + " offen.");
+        hasOpened = true;
+    }
 
 }
-

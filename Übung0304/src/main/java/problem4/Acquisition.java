@@ -7,111 +7,110 @@ import java.util.concurrent.locks.ReentrantLock;
 import static java.lang.Thread.sleep;
 
 /**
- * Created by Leona on 18.12.2016.
+ * Created by Henry on 08.01.2016.
  */
-public class Acquisition extends Thread implements Runnable {
-public static Stack<String> wQuery = new Stack<>();
-    public static List<Cashpoint> cashpoints = new ArrayList<>();
-    public static int currentCP = 0;
-    public static int currentCustomer = 1;
-    private Lock lock = new ReentrantLock();
+public class Acquisition implements Runnable {
+
+    Cashpoint[] cashpoints;
+    Balance balance;
+    public Lock lock;
+    private boolean stopAcquisition = false;
 
     @Override
     public void run() {
-        while (!CheckIfFull() && wQuery.size()<7) {
+
+        initiate();
+
+        while (!stopAcquisition){
+
+            Cashpoint current = getLeastCustomersCashpoint();
+
+            String customer = "Customer"+ (current.getTotalCustomers() + 1);
+            current.addToWaitingQueue(customer);
+
             try {
-                lock.lock();
-
-                String c = "Kunde " + currentCustomer;
-
-                //Warten bis nächster Kunde akquiriert wird
-                int wait = (int) (Math.random() * 3); //Akquise dauert von 0 bis 2 Sekunden.
-                sleep(wait * 1000);
-                wQuery.add(c);
-                System.out.print("Neuen Kunde akquiriert (KdNr = "+currentCustomer+")");
-
-                lock.unlock();
-
-                //Leere Kassen schließen
-                CheckIfEmpty();
-                //Checken, ob eine neue Kasse geöffnet werden muss
-                CheckToOpen();
-                // Kasse für den nächsten Kunden auswählen und hinzufügen
-                if (EmptiestCP() <0) {
-                    System.out.print("Keine Kasse verfügbar\n");
-                    break;
-                } else {
-                    currentCP = EmptiestCP()-1;
-                    cashpoints.get(currentCP).AddToQueue(wQuery.pop());
-                    cashpoints.forEach((Cashpoint cashpoint) -> System.out.print(cashpoint.cashpointNr+" : "+cashpoint.waitingQueue.size()+"...open"+cashpoint.open+ "\n"));
-                    System.out.print("Kunde " + currentCustomer + " wurde Kasse " + cashpoints.get(currentCP).cashpointNr+ " hinzugefügt....TotaleWarteschlange: "+ wQuery.size()+"\n");//cashpoints.get(currentCP).waitingQueue + \" )\\n\");
-                    currentCustomer++;
-                }
-
-            } catch (InterruptedException e) {
+                int wait = (int) (Math.random()*3); //Akquise dauert von 0 bis 2 Sekunden.
+                sleep(wait*1000);
+            }catch ( InterruptedException e ) {
                 e.printStackTrace();
             }
+
         }
-        System.out.print("Keine neuen Kunden werden mehr akquiriert");
 
     }
 
-    public boolean CheckIfFull() {
-        for (Cashpoint c : cashpoints) {
-            if (c.waitingQueue.size() > 7) {
-                return true;
+
+    /**
+     * Returns the Cashpoint with least customers in queue
+     * @return
+     */
+    private Cashpoint getLeastCustomersCashpoint(){
+        Cashpoint cashpoint = null;
+        //get the first open cashpoint:
+        for(int i = 0; i < cashpoints.length; i++){
+            if(cashpoints[i] != null){
+                cashpoint = cashpoints[i];
+                break;
             }
         }
-        return false;
+        //iterate to get the one with least customers:
+        for(int i = 0; i < cashpoints.length; i++){
+            if(cashpoints[i] != null && cashpoints[i].getWaitingQueueSize() < cashpoint.getWaitingQueueSize()){
+                cashpoint = cashpoints[i];
+                break;
+            }
+        }
+        return cashpoint;
     }
 
-    public void CheckIfEmpty(){
-        for (Cashpoint c : cashpoints) {
-            if (c.waitingQueue.isEmpty() && c.alreadyStarted) {
-                c.open = false;
+    /**
+     * Stops the acquisition of new customers
+     */
+    public void stopAcquisition(){
+        if(!stopAcquisition){
+            System.out.println("Es werden keine neuen Kunden mehr aufgenommen.");
+            stopAcquisition = true;
+        }
+
+    }
+
+    /**
+     * Searches for the first not opened/created Cashpoint and opens it
+     */
+    public void openNewCashpoint(){
+        for(int i = 0; i < cashpoints.length; i++) {
+            if (cashpoints[i] == null  ) {
+                Cashpoint c = new Cashpoint(i, new ArrayList<>(), balance, this);
+                cashpoints[i] = c;
+                Thread thread = new Thread(c);
+                thread.start();
+                System.out.println("Kasse " + i + " wird geöffnet");
+                break;
             }
         }
     }
 
-    public void CheckToOpen() {
-        boolean oneIsFull = false;
-        for (Cashpoint c : cashpoints) {
-            if (c.waitingQueue.size() > 5) {
-                oneIsFull = true;
-            }
-        }
-        if(oneIsFull) {
-            for (Cashpoint c : cashpoints) {
-                if (!c.open && !c.alreadyStarted) {
-                    System.out.print("Kasse " + c.cashpointNr + " wurde geöffnet\n");
-                    c.open = true;
-                    c.start();
-                    c.alreadyStarted = true;
-                    try {
-                        sleep(6000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                }
-
-            }
-        }
+    /**
+     * Removes the cashpoint from the list
+     * @param cashpoint
+     */
+    public void closeCashpoint(Cashpoint cashpoint){
+        cashpoints[cashpoint.getNr()] = null;
     }
 
-    public int EmptiestCP(){
-        int ecp = -1;
-        int size =100;
-        for(Cashpoint c :cashpoints){
-            if(!c.open){
-                continue;
-            }
-            if(c.waitingQueue.size() < size) {
-                ecp = c.cashpointNr;
-                size = c.waitingQueue.size();
-            }
-        }
-        return ecp;
+    /**
+     * Sets up variables and creates the first cashpoint
+     */
+    private  void initiate(){
+        balance = new Balance();
+        cashpoints = new Cashpoint[Problem4Main.MAX_CASHPOINTS];
+        lock = new ReentrantLock();
+
+        Cashpoint c = new Cashpoint(0, new ArrayList<>(), balance, this);
+        cashpoints[0] = c;
+        System.out.println("Kasse 0 wird geöffnet");
+        Thread thread = new Thread(c);
+        thread.start();
     }
 
 }
