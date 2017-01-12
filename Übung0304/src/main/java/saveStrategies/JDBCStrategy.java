@@ -26,7 +26,7 @@ public class JDBCStrategy extends AbstractDatabaseStrategy {
         if(jdbcConnector == null)
             open();
         if(productIterator == null){
-            productIterator = jdbcConnector.read(10);
+            productIterator = jdbcConnector.readProducts(10);
         }
         if(productIterator.hasNext())
             return productIterator.next();

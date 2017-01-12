@@ -13,19 +13,21 @@ import java.util.ListIterator;
  */
 public class JDBCConnector {
 
-
     private String url =  "jdbc:postgresql://java.is.uni-due.de/ws1011";
     private String user =  "ws1011";
     private String password = "ftpw10";
 
-
+    /**
+     * Test method
+     * @param args
+     */
     public  static  void main(String args[]){
-
-        JDBCConnector jdbcConnector = new JDBCConnector();
-        //jdbcConnector.printInfos();
-       // System.out.println(jdbcConnector.insert("wudrst",10,2));
-
         /*
+        JDBCConnector jdbcConnector = new JDBCConnector();
+        jdbcConnector.printInfos();
+        System.out.println(jdbcConnector.insert("wudrst",10,2));
+
+
         Product p = jdbcConnector.read(11453);
         if(p != null){
             System.out.println(p.getId());
@@ -36,6 +38,9 @@ public class JDBCConnector {
         */
     }
 
+    /**
+     * Prints URL, Username, and tables
+     */
     public void printInfos(){
         try (Connection con = DriverManager.getConnection(url, user, password))
         {
@@ -62,6 +67,13 @@ public class JDBCConnector {
         { e.printStackTrace() ; }
     }
 
+    /**
+     * Inserts a new product by its properties into DB
+     * @param name
+     * @param price
+     * @param quantity
+     * @return
+     */
     public long insert(String name, double price, int quantity){
         try (Connection con = DriverManager.getConnection(url, user, password);
               PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO products (name, price, quantity) VALUES(?,?,?)",
@@ -85,11 +97,21 @@ public class JDBCConnector {
         return  -1;
     }
 
+    /**
+     * Inserts a new product into DB
+     * @param product
+     */
     public void insert(Product product){
         long id = insert(product.getName(), product.getPrice(), product.getQuantity());
         product.setId(id);
     }
 
+    /**
+     * Returns a product by its ID from the Database,
+     * in case no Product was found: return null
+     * @param productID
+     * @return
+     */
     public Product read(long productID){
         try (Connection con = DriverManager.getConnection(url, user, password);
              PreparedStatement preparedStatement = con.prepareStatement("SELECT id, name, price, quantity FROM products WHERE id=? ");
@@ -118,7 +140,12 @@ public class JDBCConnector {
         return  null;
     }
 
-    public Iterator<Product> read(int limit){
+    /**
+     * Returns the n products with the highest ID in the database
+     * @param limit n
+     * @return
+     */
+    public Iterator<Product> readProducts(int limit){
         ArrayList<Product> productArrayList = new ArrayList<Product>();
         try (Connection con = DriverManager.getConnection(url, user, password);
              PreparedStatement preparedStatement = con.prepareStatement("SELECT id, name, price, quantity " +
