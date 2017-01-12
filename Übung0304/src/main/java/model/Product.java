@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAliasType;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.property.*;
 
@@ -22,6 +24,8 @@ import org.apache.openjpa.persistence.jdbc.Strategy;
 
 @Entity()
 @Table(name = "products")
+@XStreamAliasType ("ware ") // OpenJPA abl e i tung en werden auch a l s ware bezeuchnet .
+@XStreamAlias ("ware ")
 public class Product implements fpt.com.Product, Externalizable {
 
     @Id
