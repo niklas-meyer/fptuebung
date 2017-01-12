@@ -14,13 +14,14 @@ public class Acquisition implements Runnable {
     Cashpoint[] cashpoints;
     Balance balance;
     public Lock lock;
+    private boolean stopAcquisition = false;
 
     @Override
     public void run() {
 
         initiate();
 
-        while (!stopAcquisition()){
+        while (!stopAcquisition){
 
             Cashpoint current = getLeastCustomersCashpoint();
 
@@ -38,6 +39,11 @@ public class Acquisition implements Runnable {
 
     }
 
+
+    /**
+     * Returns the Cashpoint with least customers in queue
+     * @return
+     */
     private Cashpoint getLeastCustomersCashpoint(){
         Cashpoint cashpoint = null;
         //get the first open cashpoint:
@@ -57,6 +63,17 @@ public class Acquisition implements Runnable {
         return cashpoint;
     }
 
+    /**
+     * Stops the acquisition of new customers
+     */
+    public void stopAcquisition(){
+        if(!stopAcquisition){
+            System.out.println("Es werden keine neuen Kunden mehr aufgenommen.");
+            stopAcquisition = true;
+        }
+
+    }
+    /*
     private boolean stopAcquisition(){
         for(int i = 0; i < cashpoints.length; i++){
             if(cashpoints[i] != null && cashpoints[i].getWaitingQueueSize() == 8){
@@ -66,8 +83,10 @@ public class Acquisition implements Runnable {
         }
         return false;
     }
-
-
+*/
+    /**
+     * Searches for the first not opened/created Cashpoint and opens it
+     */
     public void openNewCashpoint(){
         for(int i = 0; i < cashpoints.length; i++) {
             if (cashpoints[i] == null  ) {
@@ -81,10 +100,17 @@ public class Acquisition implements Runnable {
         }
     }
 
+    /**
+     * Removes the cashpoint from the list
+     * @param cashpoint
+     */
     public void closeCashpoint(Cashpoint cashpoint){
         cashpoints[cashpoint.getNr()] = null;
     }
 
+    /**
+     * Sets up variables and creates the first cashpoint
+     */
     private  void initiate(){
         balance = new Balance();
         cashpoints = new Cashpoint[Problem4Main.MAX_CASHPOINTS];

@@ -55,6 +55,9 @@ public class Cashpoint implements Runnable {
         System.out.println("Kunde hinzugefügt (Kasse " + nr + ") - Schlange: " + getWaitingQueueSize());
         if(waitingQueue.size() == 6)
             acquisition.openNewCashpoint();
+        if(waitingQueue.size() == 8){
+            acquisition.stopAcquisition();
+        }
     }
 
 

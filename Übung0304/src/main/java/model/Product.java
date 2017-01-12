@@ -24,7 +24,8 @@ import org.apache.openjpa.persistence.jdbc.Strategy;
 
 @Entity()
 @Table(name = "products")
-@XStreamAliasType ("ware ") // OpenJPA abl e i tung en werden auch a l s ware bezeuchnet .
+
+@XStreamAliasType ("ware ")
 @XStreamAlias ("ware ")
 public class Product implements fpt.com.Product, Externalizable {
 
