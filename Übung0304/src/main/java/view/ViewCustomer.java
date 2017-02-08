@@ -1,10 +1,14 @@
 package view;
 
+import controller.ControllerCustomer;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.*;
@@ -12,33 +16,55 @@ import javafx.util.converter.IntegerStringConverter;
 import model.Product;
 import model.Order;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewCustomer extends BorderPane {
 
+    private ControllerCustomer controllerCustomer;
     private TableView<Product> table = new TableView<Product>();
     TableColumn<Product, Integer> buyColum;
     TableColumn<Product, String> nameColum;
-    private Button button = new Button("Buy");
-    private ListView<Order> liste = new ListView<Order>();
+    private Button buyButton = new Button("Buy");
+    private Button orderButton = new Button("Add To Order");
+    private Button deleteOrder = new Button("Delete Order");
+    private ListView<Product> orderList = new ListView<Product>();
     private  Label timeLabel;
+    private TextArea infoBox;
+
+    private OutgoingThread outgoingThread;
+    private IncomingThread incomingThread;
+    private TimeThread timeThread;
+    private Socket tcpSocket = null;
 
     public static void main(String[] args){
 
     }
 
-
-
-    public ViewCustomer() {
+    public ViewCustomer(ControllerCustomer controllerCustomer) {
+        this.controllerCustomer = controllerCustomer;
         // Start a thread for the date
         InetAddress ia = null;
         try {
             ia = InetAddress.getByName("localhost");
+            tcpSocket = new Socket(ia, 6666);
         } catch (UnknownHostException e2) {
             e2.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
         }
-        new ViewCustomerThread(ia, 6667, this).start();
+
+
+        timeThread = new TimeThread(ia, 6667, this);
+        timeThread.start();
+
+        outgoingThread = new OutgoingThread(tcpSocket, this);
+        outgoingThread.start();
+        incomingThread = new IncomingThread(tcpSocket, controllerCustomer);
+        incomingThread.start();
+
         //-----
 
         nameColum = new TableColumn<Product, String>("Name");
@@ -85,16 +111,23 @@ public class ViewCustomer extends BorderPane {
 
         table.getColumns().addAll(nameColum, priceColum, quantityColum, buyColum);
 
+        infoBox = new TextArea();
+        infoBox.setEditable(false);
+        infoBox.setText("");
+
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 10, 10, 10));
-        vbox.getChildren().addAll(timeLabel,table, button);
+        vbox.getChildren().addAll(timeLabel,table,
+                                    buyButton, orderButton,deleteOrder,
+                                    infoBox);
+
         VBox.setVgrow(table, Priority.ALWAYS);
 
         setRight(vbox);
 
-        liste.setPrefWidth(400);
-        setCenter(liste);
+        orderList.setPrefWidth(400);
+        setCenter(orderList);
 
     }
 
@@ -106,22 +139,174 @@ public class ViewCustomer extends BorderPane {
         timeLabel.setText(time);
     }
 
-    public void addEventHandler(
-            EventHandler<CellEditEvent<Product, String>> eventHandler) {
+    public void addEventHandler(EventHandler<ActionEvent> eventHandler) {
+        buyButton.addEventHandler(ActionEvent.ACTION, eventHandler);
+        orderButton.addEventHandler(ActionEvent.ACTION, eventHandler);
+        deleteOrder.addEventHandler(ActionEvent.ACTION, eventHandler);
+    }
 
-        nameColum.setOnEditCommit(eventHandler);
+    public Product getSelectedProduct(){
+        return table.getSelectionModel().getSelectedItem();
+    }
 
+
+
+    public void createDialogueBox(){
+        PasswordDialogue passwordDialogue = new PasswordDialogue(this, controllerCustomer);
+        passwordDialogue.sizeToScene();
+        passwordDialogue.show();
+    }
+
+    public void addToOrderList(Product product){
+        orderList.getItems().add(product);
+    }
+
+    public void deleteOrderList(){
+        orderList.getItems().clear();
+    }
+
+    public Order getOrder(){
+        Order order = new Order();
+        order.addAll(orderList.getItems());
+        return order;
+    }
+
+    public void sendMessageToServer(String authentification, Object message){
+        List<Object> msg = new ArrayList<>();
+        msg.add(authentification);
+        msg.add(message);
+        outgoingThread.sendToServer(msg);
+    }
+
+
+    public void setInfoText(String infoText){
+        String t = infoBox.getText() + infoText;
+        infoBox.setText(t);
+    }
+
+    public void onWindowClose(){
+        incomingThread.setViewExists(false);
+        outgoingThread.setViewExists(false);
+        timeThread.setViewExists(false);
+        try{
+            incomingThread.join();
+            outgoingThread.join();
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        try{
+            tcpSocket.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+
+    }
+}
+
+class IncomingThread extends Thread {
+
+    ObjectInputStream inputStream;
+
+    ControllerCustomer controllerCustomer;
+
+    private boolean viewExists = true;
+
+
+    public IncomingThread (Socket socket, ControllerCustomer controllerCustomer){
+        System.out.println("IncomingThread");
+
+        this.controllerCustomer = controllerCustomer;
+        try {
+            inputStream = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void run(){
+        while (viewExists){
+            Object received = null;
+            try {
+                received = inputStream.readObject();
+            } catch (IOException e){
+                e.printStackTrace();
+            } catch (ClassNotFoundException e){
+                e.printStackTrace();
+            }
+
+            if(received != null){
+                String rec = (String) received;
+                controllerCustomer.displayInfo(rec);
+            }
+
+        }
+        try {
+            inputStream.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void setViewExists(boolean viewExists){
+        this.viewExists = viewExists;
+    }
+}
+
+class OutgoingThread extends Thread {
+
+    ObjectOutputStream outputStream;
+    ViewCustomer viewCustomer;
+    private boolean viewExists = true;
+
+
+    public OutgoingThread (Socket socket,ViewCustomer viewCustomer){
+        System.out.println("OutgoingThread");
+        this.viewCustomer =viewCustomer;
+        try {
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            outputStream.flush();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void run(){
+        while (viewExists){
+        }
+        try {
+            outputStream.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void sendToServer(Object message){
+        try{
+            outputStream.writeObject(message);
+            outputStream.flush();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void setViewExists(boolean viewExists){
+        this.viewExists = viewExists;
     }
 
 }
 
 
-class ViewCustomerThread extends Thread {
+class TimeThread extends Thread {
     private InetAddress inetAddress;
     private int port;
     private ViewCustomer viewCustomer;
+    private boolean viewExists = true;
 
-    public ViewCustomerThread(InetAddress inetAddress, int port, ViewCustomer viewCustomer) {
+    public TimeThread(InetAddress inetAddress, int port, ViewCustomer viewCustomer) {
         this.inetAddress = inetAddress;
         this.port = port;
         this.viewCustomer = viewCustomer;
@@ -131,8 +316,8 @@ class ViewCustomerThread extends Thread {
         System.out.println("Client started");
 
         // Socket für den Klienten anlegen
-        try (DatagramSocket dSocket = new DatagramSocket(6666);) {
-            while(true){
+        try (DatagramSocket dSocket = new DatagramSocket(6668);) {
+            while(viewExists){
 
                 try{
 
@@ -153,8 +338,6 @@ class ViewCustomerThread extends Thread {
 
 
                     String answr = new String(packet.getData());
-                    System.out.println("Answer: " + answr);
-
 
                     Platform.runLater(new Runnable() {
                         @Override public void run() {
@@ -180,7 +363,10 @@ class ViewCustomerThread extends Thread {
         } catch (SocketException e1) {
             e1.printStackTrace();
         }
+    }
 
+    public void setViewExists(boolean viewExists){
+        this.viewExists = viewExists;
     }
 }
 
