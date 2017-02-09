@@ -1,5 +1,6 @@
 package view;
 
+import chat.ChatApp;
 import controller.ControllerCustomer;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -30,6 +31,7 @@ public class ViewCustomer extends BorderPane {
     private Button buyButton = new Button("Buy");
     private Button orderButton = new Button("Add To Order");
     private Button deleteOrder = new Button("Delete Order");
+    private Button askSupport = new Button("Ask Support");
     private ListView<Product> orderList = new ListView<Product>();
     private  Label timeLabel;
     private TextArea infoBox;
@@ -38,6 +40,7 @@ public class ViewCustomer extends BorderPane {
     private IncomingThread incomingThread;
     private TimeThread timeThread;
     private Socket tcpSocket = null;
+    private ChatApp chatApp = null;
 
     public static void main(String[] args){
 
@@ -119,7 +122,7 @@ public class ViewCustomer extends BorderPane {
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 10, 10, 10));
         vbox.getChildren().addAll(timeLabel,table,
-                                    buyButton, orderButton,deleteOrder,
+                                    buyButton, orderButton,deleteOrder, askSupport,
                                     infoBox);
 
         VBox.setVgrow(table, Priority.ALWAYS);
@@ -143,6 +146,7 @@ public class ViewCustomer extends BorderPane {
         buyButton.addEventHandler(ActionEvent.ACTION, eventHandler);
         orderButton.addEventHandler(ActionEvent.ACTION, eventHandler);
         deleteOrder.addEventHandler(ActionEvent.ACTION, eventHandler);
+        askSupport.addEventHandler(ActionEvent.ACTION, eventHandler);
     }
 
     public Product getSelectedProduct(){
@@ -150,6 +154,15 @@ public class ViewCustomer extends BorderPane {
     }
 
 
+    public void createChatWindow() {
+        if(chatApp == null){
+            ChatApp chatApp = new ChatApp();
+            chatApp.sizeToScene();
+            chatApp.show();
+
+        }
+
+    }
 
     public void createDialogueBox(){
         PasswordDialogue passwordDialogue = new PasswordDialogue(this, controllerCustomer);

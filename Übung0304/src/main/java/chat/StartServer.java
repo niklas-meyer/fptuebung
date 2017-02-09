@@ -31,4 +31,20 @@ public class StartServer {
         scanner.nextLine();
         chatServer.send("Hallo");
     }
+
+    public static void startRegistry(){
+        try {
+            if (System.getSecurityManager() == null) {
+                System.setSecurityManager(new NullSecurityManager());
+            }
+
+            LocateRegistry.createRegistry(1099);
+
+            ChatServer chatServer = new ChatServer();
+            Naming.rebind("//127.0.0.1:1099/chatServer", chatServer);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

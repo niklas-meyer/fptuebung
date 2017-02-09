@@ -32,6 +32,9 @@ public class ControllerCustomer {
             if (e.toString().contains("Delete Order")) {
                 view.deleteOrderList();
             }
+            if(e.toString().contains("Ask Support")){
+                view.createChatWindow();
+            }
         });
 
     }

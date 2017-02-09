@@ -1,39 +1,41 @@
-package chat;/**
- * Created by Leona on 05.02.2017.
- */
+package server;
 
-
+import chat.ChatClient;
+import chat.ClientService;
+import chat.StartServer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
 
-public class ChatApp extends Stage {
+/**
+ * Created by Henry on 09.02.2017.
+ */
+public class WarehouseChat extends Application  {
 
     ClientService chatClient;
 
+    public static void main(String[] args) {
+        launch(args);
 
-    public ChatApp(){
-        super();
-        setTitle("Support-Chat");
-        Group root = new Group();
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+
+        StartServer.startRegistry();
         GridPane gp = new GridPane();
-        Scene scene = new Scene(root, 300, 300, Color.WHITE);
-        setScene(scene);
-        TextArea chatText = new TextArea("Bitte wählen Sie einen Benutzernamen");
+        Scene sc = new Scene(gp,300,300);
+        TextArea chatText = new TextArea("Herzlichen Willkommen");
         chatText.setEditable(false);
 
         chatText.setMinSize(300,100);
@@ -51,7 +53,13 @@ public class ChatApp extends Stage {
         gp.add(h1,1,2);
         gp.add(h2,1,3);
 
-
+        if(chatClient == null){
+            try {
+                chatClient = new ChatClient("Warehouse-Admin", chatText);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
         enterButton.setOnAction(new EventHandler<ActionEvent>() {
 
             public void handle(ActionEvent event) {
@@ -76,8 +84,13 @@ public class ChatApp extends Stage {
             }
         });
 
-        root.getChildren().add(gp);
-        this.setOnCloseRequest(event -> Platform.runLater(() -> {
+
+
+        primaryStage.setScene(sc);
+        primaryStage.setTitle("Chat mit Kunden");
+        primaryStage.show();
+
+        primaryStage.setOnHiding(event -> Platform.runLater(() -> {
             if(chatClient != null){
                 try {
                     chatClient.disconnect();
@@ -86,7 +99,7 @@ public class ChatApp extends Stage {
                 }
 
             }
-            this.close();
+            System.exit(0);
         }));
     }
 }

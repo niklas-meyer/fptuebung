@@ -24,10 +24,10 @@ public class Warehouse {
 
     Order mainOrder = new Order();
 
-
-    public static void main(String[] args) {
+    public static void main(String[] args){
         Warehouse warehouse = new Warehouse();
     }
+
 
     public Warehouse (){
         new TimeThread().start();
