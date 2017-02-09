@@ -207,7 +207,7 @@ class IncomingThread extends Thread {
                 }
             }
         } catch (Exception e){
-            e.printStackTrace();
+            System.out.println("Connection lost.");
         }
 
         try {
