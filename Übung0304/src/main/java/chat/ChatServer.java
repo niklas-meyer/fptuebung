@@ -30,13 +30,11 @@ public class ChatServer extends UnicastRemoteObject implements ChatService {
         } catch (Exception e){
             e.printStackTrace();
         }
-
-        String msg = "User [" + s + "] joined. \n";
+         String msg = "User [" + s + "] joined. \n";
         msg += "Current Users: \n";
         for(String name : users.keySet()){
-            msg += "  - " + name + "\n";
+            msg += " [" + name + "] \n";
         }
-        msg += "--                --";
         send(msg);
 
     }
@@ -44,6 +42,13 @@ public class ChatServer extends UnicastRemoteObject implements ChatService {
     @Override
     public void logout(String s) throws RemoteException{
         userList.remove(s);
+        users.remove(s);
+        String msg = "User [" + s + "] disconnected. \n";
+        msg += "Current Users: \n";
+        for(String name : users.keySet()){
+            msg += " [" + name + "] \n";
+        }
+        send(msg);
     }
 
     @Override
@@ -55,7 +60,7 @@ public class ChatServer extends UnicastRemoteObject implements ChatService {
 
     @Override
     public List<String> getUserList()throws RemoteException {
-        return null;
+        return userList;
     }
 
 }

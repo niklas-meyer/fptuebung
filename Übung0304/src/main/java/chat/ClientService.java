@@ -16,6 +16,7 @@ public interface ClientService extends Remote {
 
     String getName() throws RemoteException;
 
+    void disconnect() throws RemoteException;
 
 
 }
